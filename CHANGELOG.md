@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.39.1](https://github.com/gravity-ui/uikit/compare/v7.39.0...v7.39.1) (2026-05-22)
+
+
+### Bug Fixes
+
+* **Drawer:** fixed auto focus in drawer items ([#2673](https://github.com/gravity-ui/uikit/issues/2673)) ([ed5f08e](https://github.com/gravity-ui/uikit/commit/ed5f08eb549645ed483aaaa516092fe235924300))
+* **Sheet:** fix height of scroll container when top bar is hidden ([#2680](https://github.com/gravity-ui/uikit/issues/2680)) ([210c7f8](https://github.com/gravity-ui/uikit/commit/210c7f8e32f0cacce6e7d355ee67154f6a42fd37))
+
 ## [7.39.0](https://github.com/gravity-ui/uikit/compare/v7.38.0...v7.39.0) (2026-05-16)
 
 
