@@ -211,7 +211,13 @@ function validateComponent(component, errors) {
         validateInput(input, figmaProperties, context, errors);
     }
 
-    const exampleProps = component.example?.props;
+    const example = isRecord(component.example) ? component.example : undefined;
+
+    if (!example) {
+        errors.push(`${context}: example must be an object`);
+    }
+
+    const exampleProps = example?.props;
 
     if (exampleProps !== undefined && !Array.isArray(exampleProps)) {
         errors.push(`${context}: example.props must be an array`);
@@ -227,7 +233,7 @@ function validateComponent(component, errors) {
         }
     }
 
-    if (component.example?.children && availableProps && !availableProps.has('children')) {
+    if (example?.children && availableProps && !availableProps.has('children')) {
         errors.push(`${context}: unknown code prop "children"`);
     }
 }

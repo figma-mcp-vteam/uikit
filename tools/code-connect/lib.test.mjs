@@ -134,6 +134,24 @@ test('rejects malformed inputs without throwing', () => {
     assert.match(validateRegistry(registry).join('\n'), /button: inputs must be an array/);
 });
 
+test('rejects missing examples without throwing', () => {
+    const registry = cloneRegistry();
+    const button = registry.components.find((component) => component.id === 'button');
+
+    delete button.example;
+
+    assert.match(validateRegistry(registry).join('\n'), /button: example must be an object/);
+});
+
+test('rejects malformed examples without throwing', () => {
+    const registry = cloneRegistry();
+    const button = registry.components.find((component) => component.id === 'button');
+
+    button.example = [];
+
+    assert.match(validateRegistry(registry).join('\n'), /button: example must be an object/);
+});
+
 test('rejects malformed example props without throwing', () => {
     const registry = cloneRegistry();
     const button = registry.components.find((component) => component.id === 'button');
