@@ -57,7 +57,9 @@ export function normalizeFigmaPropertyDefinitions(definitions = {}) {
 }
 
 export function getGeneratedFilePath(component, generatedDir = GENERATED_DIR) {
-    return path.join(generatedDir, component.generatedFile || `${component.name}.figma.ts`);
+    const generatedFile = component.generatedFile || `${component.name}.figma.ts`;
+
+    return resolveGeneratedFilePath(generatedDir, generatedFile);
 }
 
 export function getExpectedGeneratedFiles(registry, generatedDir = GENERATED_DIR) {
@@ -189,15 +191,10 @@ function validateComponent(component, errors) {
         }
     }
 
-    const sourcePath = path.join(ROOT_DIR, component.source || '');
+    validateGeneratedFile(component, context, errors);
 
-    if (!fs.existsSync(sourcePath)) {
-        errors.push(`${context}: source file does not exist: ${component.source}`);
-    }
-
-    const availableProps = fs.existsSync(sourcePath)
-        ? getComponentProps(sourcePath, component.name)
-        : new Set();
+    const sourcePath = getSourcePath(component, context, errors);
+    const availableProps = sourcePath ? getComponentProps(sourcePath, component.name) : undefined;
 
     const figmaProperties = component.figmaProperties || {};
     validateUnique(
@@ -206,17 +203,31 @@ function validateComponent(component, errors) {
         errors,
     );
 
-    for (const input of component.inputs || []) {
+    if (!Array.isArray(component.inputs)) {
+        errors.push(`${context}: inputs must be an array`);
+    }
+
+    for (const input of Array.isArray(component.inputs) ? component.inputs : []) {
         validateInput(input, figmaProperties, context, errors);
     }
 
-    for (const prop of component.example?.props || []) {
+    const exampleProps = component.example?.props;
+
+    if (exampleProps !== undefined && !Array.isArray(exampleProps)) {
+        errors.push(`${context}: example.props must be an array`);
+    }
+
+    for (const prop of Array.isArray(exampleProps) ? exampleProps : []) {
+        if (!availableProps) {
+            continue;
+        }
+
         if (!availableProps.has(prop.prop)) {
             errors.push(`${context}: unknown code prop "${prop.prop}"`);
         }
     }
 
-    if (component.example?.children && !availableProps.has('children')) {
+    if (component.example?.children && availableProps && !availableProps.has('children')) {
         errors.push(`${context}: unknown code prop "children"`);
     }
 }
@@ -299,6 +310,82 @@ function validateUnique(values, label, errors) {
 
         seen.add(value);
     }
+}
+
+function validateGeneratedFile(component, context, errors) {
+    try {
+        resolveGeneratedFilePath(
+            GENERATED_DIR,
+            component.generatedFile || `${component.name}.figma.ts`,
+        );
+    } catch (error) {
+        errors.push(`${context}: ${error.message}`);
+    }
+}
+
+function getSourcePath(component, context, errors) {
+    if (!component.source) {
+        return undefined;
+    }
+
+    let sourcePath;
+
+    try {
+        sourcePath = resolveContainedPath(ROOT_DIR, component.source, 'source');
+    } catch (error) {
+        errors.push(`${context}: ${error.message}`);
+        return undefined;
+    }
+
+    if (!fs.existsSync(sourcePath) || !fs.statSync(sourcePath).isFile()) {
+        errors.push(`${context}: source file does not exist: ${component.source}`);
+        return undefined;
+    }
+
+    return sourcePath;
+}
+
+function resolveGeneratedFilePath(generatedDir, generatedFile) {
+    if (typeof generatedFile !== 'string') {
+        throw new Error('generatedFile must be a string');
+    }
+
+    if (path.basename(generatedFile) !== generatedFile || generatedFile.includes('\\')) {
+        throw new Error(`generatedFile must be a file name, not a path: ${generatedFile}`);
+    }
+
+    return resolveContainedPath(generatedDir, generatedFile, 'generatedFile');
+}
+
+function resolveContainedPath(baseDir, relativePath, label) {
+    if (typeof relativePath !== 'string') {
+        throw new Error(`${label} must be a string`);
+    }
+
+    if (path.isAbsolute(relativePath)) {
+        throw new Error(`${label} must be relative: ${relativePath}`);
+    }
+
+    const basePath = path.resolve(baseDir);
+    const resolvedPath = path.resolve(basePath, relativePath);
+
+    if (!isPathInside(resolvedPath, basePath)) {
+        throw new Error(`${label} must stay inside ${formatBasePath(basePath)}: ${relativePath}`);
+    }
+
+    return resolvedPath;
+}
+
+function isPathInside(filePath, directoryPath) {
+    const relativePath = path.relative(directoryPath, filePath);
+
+    return (
+        relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath))
+    );
+}
+
+function formatBasePath(basePath) {
+    return basePath === ROOT_DIR ? 'repository root' : path.relative(ROOT_DIR, basePath);
 }
 
 function listGeneratedTemplateFiles(generatedDir) {

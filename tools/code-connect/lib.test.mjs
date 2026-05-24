@@ -7,6 +7,7 @@ import test from 'node:test';
 import {
     generateComponentTemplate,
     getFigmaNodeUrl,
+    getGeneratedFilePath,
     normalizeFigmaPropertyDefinitions,
     normalizeNodeId,
     readRegistry,
@@ -94,6 +95,52 @@ test('rejects missing enum mappings', () => {
         validateRegistry(registry).join('\n'),
         /button: "View" enum values must be an object/,
     );
+});
+
+test('rejects generated files outside the generated directory', () => {
+    const registry = cloneRegistry();
+    const button = registry.components.find((component) => component.id === 'button');
+
+    button.generatedFile = '../OldButton.figma.ts';
+
+    assert.match(
+        validateRegistry(registry).join('\n'),
+        /button: generatedFile must be a file name, not a path: \.\.\/OldButton\.figma\.ts/,
+    );
+    assert.throws(
+        () => getGeneratedFilePath(button),
+        /generatedFile must be a file name, not a path: \.\.\/OldButton\.figma\.ts/,
+    );
+});
+
+test('rejects source files outside the repository', () => {
+    const registry = cloneRegistry();
+    const button = registry.components.find((component) => component.id === 'button');
+
+    button.source = '../../../../../etc/passwd';
+
+    assert.match(
+        validateRegistry(registry).join('\n'),
+        /button: source must stay inside repository root: \.\.\/\.\.\/\.\.\/\.\.\/\.\.\/etc\/passwd/,
+    );
+});
+
+test('rejects malformed inputs without throwing', () => {
+    const registry = cloneRegistry();
+    const button = registry.components.find((component) => component.id === 'button');
+
+    button.inputs = {};
+
+    assert.match(validateRegistry(registry).join('\n'), /button: inputs must be an array/);
+});
+
+test('rejects malformed example props without throwing', () => {
+    const registry = cloneRegistry();
+    const button = registry.components.find((component) => component.id === 'button');
+
+    button.example.props = {};
+
+    assert.match(validateRegistry(registry).join('\n'), /button: example\.props must be an array/);
 });
 
 test('rejects generated props that do not exist in code', () => {
