@@ -97,6 +97,20 @@ test('rejects missing enum mappings', () => {
     );
 });
 
+test('rejects missing Figma property snapshots', () => {
+    const registry = cloneRegistry();
+    const button = registry.components.find((component) => component.id === 'button');
+
+    button.inputs = [];
+    button.example.props = [];
+    delete button.figmaProperties;
+
+    assert.match(
+        validateRegistry(registry).join('\n'),
+        /button: figmaProperties must be an object/,
+    );
+});
+
 test('rejects generated files outside the generated directory', () => {
     const registry = cloneRegistry();
     const button = registry.components.find((component) => component.id === 'button');

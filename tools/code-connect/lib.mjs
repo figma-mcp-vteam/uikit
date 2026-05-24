@@ -196,7 +196,11 @@ function validateComponent(component, errors) {
     const sourcePath = getSourcePath(component, context, errors);
     const availableProps = sourcePath ? getComponentProps(sourcePath, component.name) : undefined;
 
-    const figmaProperties = component.figmaProperties || {};
+    if (!isRecord(component.figmaProperties)) {
+        errors.push(`${context}: figmaProperties must be an object`);
+    }
+
+    const figmaProperties = isRecord(component.figmaProperties) ? component.figmaProperties : {};
     validateUnique(
         Object.values(figmaProperties).map((property) => property.name),
         `${context} Figma property display name`,
