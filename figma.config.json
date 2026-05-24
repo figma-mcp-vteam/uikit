@@ -1,0 +1,8 @@
+{
+    "codeConnect": {
+        "include": ["figma/code-connect/generated/**/*.figma.ts"],
+        "label": "React",
+        "language": "tsx",
+        "defaultBranch": "main"
+    }
+}
