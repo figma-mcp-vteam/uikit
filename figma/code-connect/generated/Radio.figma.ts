@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/1xmAVpNG0xrBD9LqsOYWSk/Gravity-UI-MCP-Fun?node-id=53131%3A43373
+// url=https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC-Gravity-UI-Code-connect-test?node-id=17215%3A9861
 // source=src/components/Radio/Radio.tsx
 // component=Radio
 import figma from 'figma';

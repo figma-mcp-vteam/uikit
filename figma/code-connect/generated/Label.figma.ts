@@ -1,10 +1,10 @@
-// url=https://www.figma.com/design/1xmAVpNG0xrBD9LqsOYWSk/Gravity-UI-MCP-Fun?node-id=53380%3A170630
+// url=https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC-Gravity-UI-Code-connect-test?node-id=77305%3A21930
 // source=src/components/Label/Label.tsx
 // component=Label
 import figma from 'figma';
 
 const instance = figma.selectedInstance;
-const size = instance.getEnum('Size', {'XS': 'xs', 'S': 's', 'M': 'm'});
+const size = instance.getEnum('Size', {'XS': 'xs', 'XXS': 'xxs', 'S': 's', 'M': 'm'});
 const theme = instance.getEnum('Theme', {'Normal': 'normal', 'Info': 'info', 'Success': 'success', 'Warning': 'warning', 'Danger': 'danger', 'Unknown': 'unknown', 'Utility': 'utility', 'Clear': 'clear'});
 const valueVisible = instance.getBoolean('Value');
 const children = instance.getString('Key text') || 'Label';

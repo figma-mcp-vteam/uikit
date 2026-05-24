@@ -21,7 +21,7 @@ test('builds Figma node urls from registry entries', () => {
 
     assert.equal(
         getFigmaNodeUrl(registry, button),
-        'https://www.figma.com/design/1xmAVpNG0xrBD9LqsOYWSk/Gravity-UI-MCP-Fun?node-id=53098%3A497062',
+        'https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC-Gravity-UI-Code-connect-test?node-id=41899%3A462118',
     );
 });
 
@@ -73,6 +73,7 @@ test('generates the Button template deterministically', () => {
     assert.match(output, /import \{Button\} from '@gravity-ui\/uikit';/);
     assert.ok(output.includes('view=${view}'));
     assert.ok(output.includes("disabled=${state === 'Disabled'}"));
+    assert.ok(output.includes("selected=${state === 'Selected' || state === 'Selected hover'}"));
     assert.doesNotMatch(output, /iconOnly/);
 });
 

@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/1xmAVpNG0xrBD9LqsOYWSk/Gravity-UI-MCP-Fun?node-id=53168%3A66962
+// url=https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC-Gravity-UI-Code-connect-test?node-id=43749%3A467962
 // source=src/components/Select/Select.tsx
 // component=Select
 import figma from 'figma';

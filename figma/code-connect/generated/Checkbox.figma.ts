@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/1xmAVpNG0xrBD9LqsOYWSk/Gravity-UI-MCP-Fun?node-id=53103%3A9376
+// url=https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC-Gravity-UI-Code-connect-test?node-id=48571%3A15566
 // source=src/components/Checkbox/Checkbox.tsx
 // component=Checkbox
 import figma from 'figma';

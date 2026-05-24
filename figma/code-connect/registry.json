@@ -1,13 +1,13 @@
 {
     "version": 1,
-    "figmaFileKey": "1xmAVpNG0xrBD9LqsOYWSk",
-    "figmaFileName": "Gravity-UI-MCP-Fun",
+    "figmaFileKey": "GihZUtevc7oCwpDQrcdR4i",
+    "figmaFileName": "YC-Gravity-UI-Code-connect-test",
     "components": [
         {
             "id": "button",
             "name": "Button",
             "generatedFile": "Button.figma.ts",
-            "nodeId": "53098:497062",
+            "nodeId": "41899:462118",
             "source": "src/components/Button/Button.tsx",
             "importStatement": "import {Button} from '@gravity-ui/uikit';",
             "figmaProperties": {
@@ -68,19 +68,35 @@
                     "name": "Size",
                     "type": "VARIANT",
                     "key": "Size",
-                    "variantOptions": ["XS", "S", "M", "L", "XL"]
+                    "variantOptions": [
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
                 },
                 "State": {
                     "name": "State",
                     "type": "VARIANT",
                     "key": "State",
-                    "variantOptions": ["Default", "Hover", "Disabled", "Loading", "Selected"]
+                    "variantOptions": [
+                        "Default",
+                        "Hover",
+                        "Disabled",
+                        "Loading",
+                        "Selected",
+                        "Selected hover"
+                    ]
                 },
                 "Icon only": {
                     "name": "Icon only",
                     "type": "VARIANT",
                     "key": "Icon only",
-                    "variantOptions": ["Off", "On"]
+                    "variantOptions": [
+                        "Off",
+                        "On"
+                    ]
                 }
             },
             "inputs": [
@@ -116,7 +132,13 @@
                     "kind": "enum",
                     "name": "size",
                     "figma": "Size",
-                    "values": {"XS": "xs", "S": "s", "M": "m", "L": "l", "XL": "xl"}
+                    "values": {
+                        "XS": "xs",
+                        "S": "s",
+                        "M": "m",
+                        "L": "l",
+                        "XL": "xl"
+                    }
                 },
                 {
                     "kind": "enum",
@@ -127,19 +149,40 @@
                         "Hover": "Hover",
                         "Disabled": "Disabled",
                         "Loading": "Loading",
-                        "Selected": "Selected"
+                        "Selected": "Selected",
+                        "Selected hover": "Selected hover"
                     }
                 },
-                {"kind": "text", "name": "children", "figma": "Content", "fallback": "Button"}
+                {
+                    "kind": "text",
+                    "name": "children",
+                    "figma": "Content",
+                    "fallback": "Button"
+                }
             ],
             "example": {
                 "component": "Button",
                 "props": [
-                    {"prop": "view", "value": "view"},
-                    {"prop": "size", "value": "size"},
-                    {"prop": "disabled", "value": "state === 'Disabled'"},
-                    {"prop": "loading", "value": "state === 'Loading'"},
-                    {"prop": "selected", "value": "state === 'Selected'"}
+                    {
+                        "prop": "view",
+                        "value": "view"
+                    },
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "loading",
+                        "value": "state === 'Loading'"
+                    },
+                    {
+                        "prop": "selected",
+                        "value": "state === 'Selected' || state === 'Selected hover'"
+                    }
                 ],
                 "children": "children"
             }
@@ -148,7 +191,7 @@
             "id": "checkbox",
             "name": "Checkbox",
             "generatedFile": "Checkbox.figma.ts",
-            "nodeId": "53103:9376",
+            "nodeId": "48571:15566",
             "source": "src/components/Checkbox/Checkbox.tsx",
             "importStatement": "import {Checkbox} from '@gravity-ui/uikit';",
             "figmaProperties": {
@@ -166,25 +209,39 @@
                     "name": "Size",
                     "type": "VARIANT",
                     "key": "Size",
-                    "variantOptions": ["M", "L", "XL"]
+                    "variantOptions": [
+                        "M",
+                        "L",
+                        "XL"
+                    ]
                 },
                 "State": {
                     "name": "State",
                     "type": "VARIANT",
                     "key": "State",
-                    "variantOptions": ["Default", "Hover", "Disabled"]
+                    "variantOptions": [
+                        "Default",
+                        "Hover",
+                        "Disabled"
+                    ]
                 },
                 "Checked": {
                     "name": "Checked",
                     "type": "VARIANT",
                     "key": "Checked",
-                    "variantOptions": ["Off", "On"]
+                    "variantOptions": [
+                        "Off",
+                        "On"
+                    ]
                 },
                 "Indeterminate": {
                     "name": "Indeterminate",
                     "type": "VARIANT",
                     "key": "Indeterminate",
-                    "variantOptions": ["On", "Off"]
+                    "variantOptions": [
+                        "On",
+                        "Off"
+                    ]
                 }
             },
             "inputs": [
@@ -192,27 +249,45 @@
                     "kind": "enum",
                     "name": "size",
                     "figma": "Size",
-                    "values": {"M": "m", "L": "l", "XL": "xl"}
+                    "values": {
+                        "M": "m",
+                        "L": "l",
+                        "XL": "xl"
+                    }
                 },
                 {
                     "kind": "enum",
                     "name": "state",
                     "figma": "State",
-                    "values": {"Default": "Default", "Hover": "Hover", "Disabled": "Disabled"}
+                    "values": {
+                        "Default": "Default",
+                        "Hover": "Hover",
+                        "Disabled": "Disabled"
+                    }
                 },
                 {
                     "kind": "enum",
                     "name": "checked",
                     "figma": "Checked",
-                    "values": {"Off": false, "On": true}
+                    "values": {
+                        "Off": false,
+                        "On": true
+                    }
                 },
                 {
                     "kind": "enum",
                     "name": "indeterminate",
                     "figma": "Indeterminate",
-                    "values": {"On": true, "Off": false}
+                    "values": {
+                        "On": true,
+                        "Off": false
+                    }
                 },
-                {"kind": "boolean", "name": "contentVisible", "figma": "Content"},
+                {
+                    "kind": "boolean",
+                    "name": "contentVisible",
+                    "figma": "Content"
+                },
                 {
                     "kind": "text",
                     "name": "contentText",
@@ -223,11 +298,26 @@
             "example": {
                 "component": "Checkbox",
                 "props": [
-                    {"prop": "size", "value": "size"},
-                    {"prop": "checked", "value": "checked"},
-                    {"prop": "indeterminate", "value": "indeterminate"},
-                    {"prop": "disabled", "value": "state === 'Disabled'"},
-                    {"prop": "content", "value": "contentVisible ? contentText : undefined"}
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "checked",
+                        "value": "checked"
+                    },
+                    {
+                        "prop": "indeterminate",
+                        "value": "indeterminate"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "content",
+                        "value": "contentVisible ? contentText : undefined"
+                    }
                 ]
             }
         },
@@ -235,7 +325,7 @@
             "id": "radio",
             "name": "Radio",
             "generatedFile": "Radio.figma.ts",
-            "nodeId": "53131:43373",
+            "nodeId": "17215:9861",
             "source": "src/components/Radio/Radio.tsx",
             "importStatement": "import {Radio} from '@gravity-ui/uikit';",
             "figmaProperties": {
@@ -253,19 +343,30 @@
                     "name": "Size",
                     "type": "VARIANT",
                     "key": "Size",
-                    "variantOptions": ["M", "L", "XL"]
+                    "variantOptions": [
+                        "M",
+                        "L",
+                        "XL"
+                    ]
                 },
                 "State": {
                     "name": "State",
                     "type": "VARIANT",
                     "key": "State",
-                    "variantOptions": ["Default", "Hover", "Disabled"]
+                    "variantOptions": [
+                        "Default",
+                        "Hover",
+                        "Disabled"
+                    ]
                 },
                 "Checked": {
                     "name": "Checked",
                     "type": "VARIANT",
                     "key": "Checked",
-                    "variantOptions": ["On", "Off"]
+                    "variantOptions": [
+                        "On",
+                        "Off"
+                    ]
                 }
             },
             "inputs": [
@@ -273,37 +374,71 @@
                     "kind": "enum",
                     "name": "size",
                     "figma": "Size",
-                    "values": {"M": "m", "L": "l", "XL": "xl"}
+                    "values": {
+                        "M": "m",
+                        "L": "l",
+                        "XL": "xl"
+                    }
                 },
                 {
                     "kind": "enum",
                     "name": "state",
                     "figma": "State",
-                    "values": {"Default": "Default", "Hover": "Hover", "Disabled": "Disabled"}
+                    "values": {
+                        "Default": "Default",
+                        "Hover": "Hover",
+                        "Disabled": "Disabled"
+                    }
                 },
                 {
                     "kind": "enum",
                     "name": "checked",
                     "figma": "Checked",
-                    "values": {"On": true, "Off": false}
+                    "values": {
+                        "On": true,
+                        "Off": false
+                    }
                 },
-                {"kind": "boolean", "name": "contentVisible", "figma": "Content"},
+                {
+                    "kind": "boolean",
+                    "name": "contentVisible",
+                    "figma": "Content"
+                },
                 {
                     "kind": "text",
                     "name": "contentText",
                     "figma": "↳ Content text",
                     "fallback": "Radio"
                 },
-                {"kind": "literal", "name": "value", "value": "value"}
+                {
+                    "kind": "literal",
+                    "name": "value",
+                    "value": "value"
+                }
             ],
             "example": {
                 "component": "Radio",
                 "props": [
-                    {"prop": "value", "value": "value"},
-                    {"prop": "size", "value": "size"},
-                    {"prop": "checked", "value": "checked"},
-                    {"prop": "disabled", "value": "state === 'Disabled'"},
-                    {"prop": "content", "value": "contentVisible ? contentText : undefined"}
+                    {
+                        "prop": "value",
+                        "value": "value"
+                    },
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "checked",
+                        "value": "checked"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "content",
+                        "value": "contentVisible ? contentText : undefined"
+                    }
                 ]
             }
         },
@@ -311,7 +446,7 @@
             "id": "switch",
             "name": "Switch",
             "generatedFile": "Switch.figma.ts",
-            "nodeId": "53131:64366",
+            "nodeId": "17215:9968",
             "source": "src/components/Switch/Switch.tsx",
             "importStatement": "import {Switch} from '@gravity-ui/uikit';",
             "figmaProperties": {
@@ -329,42 +464,69 @@
                     "name": "Size",
                     "type": "VARIANT",
                     "key": "Size",
-                    "variantOptions": ["M", "L"]
+                    "variantOptions": [
+                        "M",
+                        "S",
+                        "L"
+                    ]
+                },
+                "State": {
+                    "name": "State",
+                    "type": "VARIANT",
+                    "key": "State",
+                    "variantOptions": [
+                        "Default",
+                        "Hover",
+                        "Disabled",
+                        "Loading"
+                    ]
                 },
                 "Selected": {
                     "name": "Selected",
                     "type": "VARIANT",
                     "key": "Selected",
-                    "variantOptions": ["False", "True"]
-                },
-                "Disabled": {
-                    "name": "Disabled",
-                    "type": "VARIANT",
-                    "key": "Disabled",
-                    "variantOptions": ["False", "True"]
-                },
-                "Hovered": {
-                    "name": "Hovered",
-                    "type": "VARIANT",
-                    "key": "Hovered",
-                    "variantOptions": ["True", "False"]
+                    "variantOptions": [
+                        "False",
+                        "True"
+                    ]
                 }
             },
             "inputs": [
-                {"kind": "enum", "name": "size", "figma": "Size", "values": {"M": "m", "L": "l"}},
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "M": "m",
+                        "S": "s",
+                        "L": "l"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "state",
+                    "figma": "State",
+                    "values": {
+                        "Default": "Default",
+                        "Hover": "Hover",
+                        "Disabled": "Disabled",
+                        "Loading": "Loading"
+                    }
+                },
                 {
                     "kind": "enum",
                     "name": "checked",
                     "figma": "Selected",
-                    "values": {"False": false, "True": true}
+                    "values": {
+                        "False": false,
+                        "True": true
+                    }
                 },
                 {
-                    "kind": "enum",
-                    "name": "disabled",
-                    "figma": "Disabled",
-                    "values": {"False": false, "True": true}
+                    "kind": "boolean",
+                    "name": "contentVisible",
+                    "figma": "Content"
                 },
-                {"kind": "boolean", "name": "contentVisible", "figma": "Content"},
                 {
                     "kind": "text",
                     "name": "contentText",
@@ -375,10 +537,26 @@
             "example": {
                 "component": "Switch",
                 "props": [
-                    {"prop": "size", "value": "size"},
-                    {"prop": "checked", "value": "checked"},
-                    {"prop": "disabled", "value": "disabled"},
-                    {"prop": "content", "value": "contentVisible ? contentText : undefined"}
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "checked",
+                        "value": "checked"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "loading",
+                        "value": "state === 'Loading'"
+                    },
+                    {
+                        "prop": "content",
+                        "value": "contentVisible ? contentText : undefined"
+                    }
                 ]
             }
         },
@@ -386,7 +564,7 @@
             "id": "label",
             "name": "Label",
             "generatedFile": "Label.figma.ts",
-            "nodeId": "53380:170630",
+            "nodeId": "77305:21930",
             "source": "src/components/Label/Label.tsx",
             "importStatement": "import {Label} from '@gravity-ui/uikit';",
             "figmaProperties": {
@@ -434,7 +612,12 @@
                     "name": "Size",
                     "type": "VARIANT",
                     "key": "Size",
-                    "variantOptions": ["XS", "S", "M"]
+                    "variantOptions": [
+                        "XS",
+                        "XXS",
+                        "S",
+                        "M"
+                    ]
                 },
                 "Theme": {
                     "name": "Theme",
@@ -455,17 +638,33 @@
                     "name": "Hovered",
                     "type": "VARIANT",
                     "key": "Hovered",
-                    "variantOptions": ["Off", "On"]
+                    "variantOptions": [
+                        "Off",
+                        "On"
+                    ]
                 },
                 "Icon only": {
                     "name": "Icon only",
                     "type": "VARIANT",
                     "key": "Icon only",
-                    "variantOptions": ["Off", "On"]
+                    "variantOptions": [
+                        "Off",
+                        "On"
+                    ]
                 }
             },
             "inputs": [
-                {"kind": "enum", "name": "size", "figma": "Size", "values": {"XS": "xs", "S": "s", "M": "m"}},
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "XS": "xs",
+                        "XXS": "xxs",
+                        "S": "s",
+                        "M": "m"
+                    }
+                },
                 {
                     "kind": "enum",
                     "name": "theme",
@@ -481,162 +680,66 @@
                         "Clear": "clear"
                     }
                 },
-                {"kind": "boolean", "name": "valueVisible", "figma": "Value"},
-                {"kind": "text", "name": "children", "figma": "Key text", "fallback": "Label"},
-                {"kind": "text", "name": "valueText", "figma": "↳ Value text", "fallback": "Value"}
+                {
+                    "kind": "boolean",
+                    "name": "valueVisible",
+                    "figma": "Value"
+                },
+                {
+                    "kind": "text",
+                    "name": "children",
+                    "figma": "Key text",
+                    "fallback": "Label"
+                },
+                {
+                    "kind": "text",
+                    "name": "valueText",
+                    "figma": "↳ Value text",
+                    "fallback": "Value"
+                }
             ],
             "example": {
                 "component": "Label",
                 "props": [
-                    {"prop": "size", "value": "size"},
-                    {"prop": "theme", "value": "theme"},
-                    {"prop": "value", "value": "valueVisible ? valueText : undefined"}
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "theme",
+                        "value": "theme"
+                    },
+                    {
+                        "prop": "value",
+                        "value": "valueVisible ? valueText : undefined"
+                    }
                 ],
                 "children": "children"
-            }
-        },
-        {
-            "id": "text-input",
-            "name": "TextInput",
-            "generatedFile": "TextInput.figma.ts",
-            "nodeId": "53175:148339",
-            "source": "src/components/controls/TextInput/TextInput.tsx",
-            "importStatement": "import {TextInput} from '@gravity-ui/uikit';",
-            "figmaProperties": {
-                "Content#40132:304": {"name": "Content", "type": "BOOLEAN", "key": "Content#40132:304"},
-                "Label#40132:335": {"name": "Label", "type": "BOOLEAN", "key": "Label#40132:335"},
-                "↳ Label text#40132:397": {
-                    "name": "↳ Label text",
-                    "type": "TEXT",
-                    "key": "↳ Label text#40132:397"
-                },
-                "Clear button#41106:40": {
-                    "name": "Clear button",
-                    "type": "BOOLEAN",
-                    "key": "Clear button#41106:40"
-                },
-                "Button 1#41404:29": {"name": "Button 1", "type": "BOOLEAN", "key": "Button 1#41404:29"},
-                "Button 2#41404:58": {"name": "Button 2", "type": "BOOLEAN", "key": "Button 2#41404:58"},
-                "Additional#41404:145": {
-                    "name": "Additional",
-                    "type": "BOOLEAN",
-                    "key": "Additional#41404:145"
-                },
-                "↳ Additional text#41532:0": {
-                    "name": "↳ Additional text",
-                    "type": "TEXT",
-                    "key": "↳ Additional text#41532:0"
-                },
-                "Error icon#41670:5": {
-                    "name": "Error icon",
-                    "type": "BOOLEAN",
-                    "key": "Error icon#41670:5"
-                },
-                "↳ Content text#42091:29": {
-                    "name": "↳ Content text",
-                    "type": "TEXT",
-                    "key": "↳ Content text#42091:29"
-                },
-                "Error text#43997:114": {
-                    "name": "Error text",
-                    "type": "TEXT",
-                    "key": "Error text#43997:114"
-                },
-                "Start icon#50707:0": {
-                    "name": "Start icon",
-                    "type": "BOOLEAN",
-                    "key": "Start icon#50707:0"
-                },
-                "Right side#56440:0": {
-                    "name": "Right side",
-                    "type": "BOOLEAN",
-                    "key": "Right side#56440:0"
-                },
-                "Size": {
-                    "name": "Size",
-                    "type": "VARIANT",
-                    "key": "Size",
-                    "variantOptions": ["S", "M", "L", "XL"]
-                },
-                "State": {
-                    "name": "State",
-                    "type": "VARIANT",
-                    "key": "State",
-                    "variantOptions": [
-                        "Suggest",
-                        "Default",
-                        "Hovered",
-                        "Selected",
-                        "Disabled",
-                        "Error inline",
-                        "Error outline"
-                    ]
-                },
-                "View": {
-                    "name": "View",
-                    "type": "VARIANT",
-                    "key": "View",
-                    "variantOptions": ["Normal", "Clear"]
-                }
-            },
-            "inputs": [
-                {"kind": "enum", "name": "size", "figma": "Size", "values": {"S": "s", "M": "m", "L": "l", "XL": "xl"}},
-                {"kind": "enum", "name": "view", "figma": "View", "values": {"Normal": "normal", "Clear": "clear"}},
-                {
-                    "kind": "enum",
-                    "name": "state",
-                    "figma": "State",
-                    "values": {
-                        "Suggest": "Suggest",
-                        "Default": "Default",
-                        "Hovered": "Hovered",
-                        "Selected": "Selected",
-                        "Disabled": "Disabled",
-                        "Error inline": "Error inline",
-                        "Error outline": "Error outline"
-                    }
-                },
-                {"kind": "boolean", "name": "contentVisible", "figma": "Content"},
-                {"kind": "boolean", "name": "labelVisible", "figma": "Label"},
-                {"kind": "boolean", "name": "hasClear", "figma": "Clear button"},
-                {"kind": "text", "name": "labelText", "figma": "↳ Label text", "fallback": "Label"},
-                {"kind": "text", "name": "contentText", "figma": "↳ Content text", "fallback": "Text"},
-                {"kind": "text", "name": "errorText", "figma": "Error text", "fallback": "Error"}
-            ],
-            "derived": [
-                {"name": "isInvalid", "expression": "state === 'Error inline' || state === 'Error outline'"},
-                {"name": "errorPlacement", "expression": "state === 'Error inline' ? 'inside' : 'outside'"}
-            ],
-            "example": {
-                "component": "TextInput",
-                "props": [
-                    {"prop": "size", "value": "size"},
-                    {"prop": "view", "value": "view"},
-                    {"prop": "label", "value": "labelVisible ? labelText : undefined"},
-                    {"prop": "defaultValue", "value": "contentVisible ? contentText : undefined"},
-                    {"prop": "hasClear", "value": "hasClear"},
-                    {"prop": "disabled", "value": "state === 'Disabled'"},
-                    {"prop": "validationState", "value": "isInvalid ? 'invalid' : undefined"},
-                    {"prop": "errorPlacement", "value": "isInvalid ? errorPlacement : undefined"},
-                    {"prop": "errorMessage", "value": "isInvalid ? errorText : undefined"}
-                ]
             }
         },
         {
             "id": "select",
             "name": "Select",
             "generatedFile": "Select.figma.ts",
-            "nodeId": "53168:66962",
+            "nodeId": "43749:467962",
             "source": "src/components/Select/Select.tsx",
             "importStatement": "import {Select} from '@gravity-ui/uikit';",
             "figmaProperties": {
-                "Label#43750:0": {"name": "Label", "type": "BOOLEAN", "key": "Label#43750:0"},
+                "Label#43750:0": {
+                    "name": "Label",
+                    "type": "BOOLEAN",
+                    "key": "Label#43750:0"
+                },
                 "↳ Label text#43757:0": {
                     "name": "↳ Label text",
                     "type": "TEXT",
                     "key": "↳ Label text#43757:0"
                 },
-                "Content#43761:0": {"name": "Content", "type": "BOOLEAN", "key": "Content#43761:0"},
+                "Content#43761:0": {
+                    "name": "Content",
+                    "type": "BOOLEAN",
+                    "key": "Content#43761:0"
+                },
                 "↳ Content text#43761:6": {
                     "name": "↳ Content text",
                     "type": "TEXT",
@@ -652,7 +755,11 @@
                     "type": "BOOLEAN",
                     "key": "Clear icon#44528:0"
                 },
-                "Counter#64099:0": {"name": "Counter", "type": "BOOLEAN", "key": "Counter#64099:0"},
+                "Counter#64099:0": {
+                    "name": "Counter",
+                    "type": "BOOLEAN",
+                    "key": "Counter#64099:0"
+                },
                 "↳ Counter value#64099:57": {
                     "name": "↳ Counter value",
                     "type": "TEXT",
@@ -662,7 +769,12 @@
                     "name": "Size",
                     "type": "VARIANT",
                     "key": "Size",
-                    "variantOptions": ["S", "M", "L", "XL"]
+                    "variantOptions": [
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
                 },
                 "State": {
                     "name": "State",
@@ -682,12 +794,33 @@
                     "name": "View",
                     "type": "VARIANT",
                     "key": "View",
-                    "variantOptions": ["Normal", "Clear"]
+                    "variantOptions": [
+                        "Normal",
+                        "Clear"
+                    ]
                 }
             },
             "inputs": [
-                {"kind": "enum", "name": "size", "figma": "Size", "values": {"S": "s", "M": "m", "L": "l", "XL": "xl"}},
-                {"kind": "enum", "name": "view", "figma": "View", "values": {"Normal": "normal", "Clear": "clear"}},
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "S": "s",
+                        "M": "m",
+                        "L": "l",
+                        "XL": "xl"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "view",
+                    "figma": "View",
+                    "values": {
+                        "Normal": "normal",
+                        "Clear": "clear"
+                    }
+                },
                 {
                     "kind": "enum",
                     "name": "state",
@@ -702,29 +835,89 @@
                         "Error outline": "Error outline"
                     }
                 },
-                {"kind": "boolean", "name": "labelVisible", "figma": "Label"},
-                {"kind": "boolean", "name": "contentVisible", "figma": "Content"},
-                {"kind": "boolean", "name": "hasClear", "figma": "Clear icon"},
-                {"kind": "text", "name": "labelText", "figma": "↳ Label text", "fallback": "Label"},
-                {"kind": "text", "name": "contentText", "figma": "↳ Content text", "fallback": "Select"},
-                {"kind": "text", "name": "errorText", "figma": "Error text", "fallback": "Error"}
+                {
+                    "kind": "boolean",
+                    "name": "labelVisible",
+                    "figma": "Label"
+                },
+                {
+                    "kind": "boolean",
+                    "name": "contentVisible",
+                    "figma": "Content"
+                },
+                {
+                    "kind": "boolean",
+                    "name": "hasClear",
+                    "figma": "Clear icon"
+                },
+                {
+                    "kind": "text",
+                    "name": "labelText",
+                    "figma": "↳ Label text",
+                    "fallback": "Label"
+                },
+                {
+                    "kind": "text",
+                    "name": "contentText",
+                    "figma": "↳ Content text",
+                    "fallback": "Select"
+                },
+                {
+                    "kind": "text",
+                    "name": "errorText",
+                    "figma": "Error text",
+                    "fallback": "Error"
+                }
             ],
             "derived": [
-                {"name": "isInvalid", "expression": "state === 'Error inline' || state === 'Error outline'"},
-                {"name": "errorPlacement", "expression": "state === 'Error inline' ? 'inside' : 'outside'"}
+                {
+                    "name": "isInvalid",
+                    "expression": "state === 'Error inline' || state === 'Error outline'"
+                },
+                {
+                    "name": "errorPlacement",
+                    "expression": "state === 'Error inline' ? 'inside' : 'outside'"
+                }
             ],
             "example": {
                 "component": "Select",
                 "props": [
-                    {"prop": "size", "value": "size"},
-                    {"prop": "view", "value": "view"},
-                    {"prop": "label", "value": "labelVisible ? labelText : undefined"},
-                    {"prop": "placeholder", "value": "contentVisible ? contentText : undefined"},
-                    {"prop": "hasClear", "value": "hasClear"},
-                    {"prop": "disabled", "value": "state === 'Disabled'"},
-                    {"prop": "validationState", "value": "isInvalid ? 'invalid' : undefined"},
-                    {"prop": "errorPlacement", "value": "isInvalid ? errorPlacement : undefined"},
-                    {"prop": "errorMessage", "value": "isInvalid ? errorText : undefined"}
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "view",
+                        "value": "view"
+                    },
+                    {
+                        "prop": "label",
+                        "value": "labelVisible ? labelText : undefined"
+                    },
+                    {
+                        "prop": "placeholder",
+                        "value": "contentVisible ? contentText : undefined"
+                    },
+                    {
+                        "prop": "hasClear",
+                        "value": "hasClear"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "validationState",
+                        "value": "isInvalid ? 'invalid' : undefined"
+                    },
+                    {
+                        "prop": "errorPlacement",
+                        "value": "isInvalid ? errorPlacement : undefined"
+                    },
+                    {
+                        "prop": "errorMessage",
+                        "value": "isInvalid ? errorText : undefined"
+                    }
                 ]
             }
         }
