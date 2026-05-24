@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import test from 'node:test';
 
 import {
@@ -7,7 +10,9 @@ import {
     normalizeFigmaPropertyDefinitions,
     normalizeNodeId,
     readRegistry,
+    stableStringify,
     validateRegistry,
+    writeGeneratedFiles,
 } from './lib.mjs';
 
 test('normalizes Figma node ids', () => {
@@ -25,6 +30,16 @@ test('builds Figma node urls from registry entries', () => {
     );
 });
 
+test('encodes Figma file names in generated node urls', () => {
+    const registry = {...readRegistry(), figmaFileName: 'YC Gravity UI – Code connect test'};
+    const button = registry.components.find((component) => component.id === 'button');
+
+    assert.equal(
+        getFigmaNodeUrl(registry, button),
+        'https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC%20Gravity%20UI%20%E2%80%93%20Code%20connect%20test?node-id=41899%3A462118',
+    );
+});
+
 test('normalizes Figma component property definitions from REST shape', () => {
     assert.deepEqual(
         normalizeFigmaPropertyDefinitions({
@@ -35,6 +50,19 @@ test('normalizes Figma component property definitions from REST shape', () => {
             'Content#1:2': {name: 'Content', type: 'TEXT', key: 'Content#1:2'},
             Size: {name: 'Size', type: 'VARIANT', key: 'Size', variantOptions: ['S', 'M']},
         },
+    );
+});
+
+test('stable stringifies objects independent of key insertion order', () => {
+    assert.equal(
+        stableStringify({
+            b: {d: 1, c: 2},
+            a: ['x', {b: true, a: false}],
+        }),
+        stableStringify({
+            a: ['x', {a: false, b: true}],
+            b: {c: 2, d: 1},
+        }),
     );
 });
 
@@ -52,6 +80,19 @@ test('rejects non-exhaustive enum mappings', () => {
     assert.match(
         validateRegistry(registry).join('\n'),
         /button: "View" enum mapping mismatch; missing \[Action\], extra \[\]/,
+    );
+});
+
+test('rejects missing enum mappings', () => {
+    const registry = cloneRegistry();
+    const button = registry.components.find((component) => component.id === 'button');
+    const viewInput = button.inputs.find((input) => input.name === 'view');
+
+    delete viewInput.values;
+
+    assert.match(
+        validateRegistry(registry).join('\n'),
+        /button: "View" enum values must be an object/,
     );
 });
 
@@ -75,6 +116,27 @@ test('generates the Button template deterministically', () => {
     assert.ok(output.includes("disabled=${state === 'Disabled'}"));
     assert.ok(output.includes("selected=${state === 'Selected' || state === 'Selected hover'}"));
     assert.doesNotMatch(output, /iconOnly/);
+});
+
+test('reports and removes unexpected generated templates', () => {
+    const generatedDir = fs.mkdtempSync(path.join(os.tmpdir(), 'code-connect-generated-'));
+    const registry = cloneRegistry();
+
+    registry.components = [registry.components.find((component) => component.id === 'button')];
+
+    writeGeneratedFiles(registry, {generatedDir});
+    fs.writeFileSync(path.join(generatedDir, 'OldButton.figma.ts'), '');
+
+    assert.deepEqual(
+        writeGeneratedFiles(registry, {check: true, generatedDir}).map((filePath) =>
+            path.basename(filePath),
+        ),
+        ['OldButton.figma.ts'],
+    );
+
+    writeGeneratedFiles(registry, {generatedDir});
+
+    assert.equal(fs.existsSync(path.join(generatedDir, 'OldButton.figma.ts')), false);
 });
 
 function cloneRegistry() {

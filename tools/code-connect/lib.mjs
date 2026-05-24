@@ -33,7 +33,9 @@ export function getFigmaNodeUrl(registry, component) {
     const nodeId = encodeURIComponent(normalizeNodeId(component.nodeId));
     const fileName = registry.figmaFileName || 'Code-Connect';
 
-    return `https://www.figma.com/design/${registry.figmaFileKey}/${fileName}?node-id=${nodeId}`;
+    return `https://www.figma.com/design/${registry.figmaFileKey}/${encodeURIComponent(
+        fileName,
+    )}?node-id=${nodeId}`;
 }
 
 export function normalizeFigmaPropertyDefinitions(definitions = {}) {
@@ -54,18 +56,18 @@ export function normalizeFigmaPropertyDefinitions(definitions = {}) {
     return normalized;
 }
 
-export function getGeneratedFilePath(component) {
-    return path.join(GENERATED_DIR, component.generatedFile || `${component.name}.figma.ts`);
+export function getGeneratedFilePath(component, generatedDir = GENERATED_DIR) {
+    return path.join(generatedDir, component.generatedFile || `${component.name}.figma.ts`);
 }
 
-export function getExpectedGeneratedFiles(registry) {
-    return registry.components.map((component) => getGeneratedFilePath(component));
+export function getExpectedGeneratedFiles(registry, generatedDir = GENERATED_DIR) {
+    return registry.components.map((component) => getGeneratedFilePath(component, generatedDir));
 }
 
-export function generateAll(registry) {
+export function generateAll(registry, generatedDir = GENERATED_DIR) {
     return new Map(
         registry.components.map((component) => [
-            getGeneratedFilePath(component),
+            getGeneratedFilePath(component, generatedDir),
             generateComponentTemplate(registry, component),
         ]),
     );
@@ -98,12 +100,27 @@ export function generateComponentTemplate(registry, component) {
     ].join('\n');
 }
 
-export function writeGeneratedFiles(registry, {check = false} = {}) {
-    const generated = generateAll(registry);
+export function getUnexpectedGeneratedFiles(registry, generatedDir = GENERATED_DIR) {
+    const expectedFiles = new Set(getExpectedGeneratedFiles(registry, generatedDir));
+
+    return listGeneratedTemplateFiles(generatedDir).filter(
+        (filePath) => !expectedFiles.has(filePath),
+    );
+}
+
+export function writeGeneratedFiles(registry, {check = false, generatedDir = GENERATED_DIR} = {}) {
+    const generated = generateAll(registry, generatedDir);
+    const unexpectedFiles = getUnexpectedGeneratedFiles(registry, generatedDir);
     const errors = [];
 
-    if (!check) {
-        fs.mkdirSync(GENERATED_DIR, {recursive: true});
+    if (check) {
+        errors.push(...unexpectedFiles.map((filePath) => path.relative(ROOT_DIR, filePath)));
+    } else {
+        fs.mkdirSync(generatedDir, {recursive: true});
+
+        for (const filePath of unexpectedFiles) {
+            fs.unlinkSync(filePath);
+        }
     }
 
     for (const [filePath, content] of generated) {
@@ -121,6 +138,10 @@ export function writeGeneratedFiles(registry, {check = false} = {}) {
     }
 
     return errors;
+}
+
+export function stableStringify(value) {
+    return JSON.stringify(sortJson(value));
 }
 
 export function validateRegistry(registry) {
@@ -218,6 +239,11 @@ function validateInput(input, figmaProperties, context, errors) {
             return;
         }
 
+        if (!isRecord(input.values)) {
+            errors.push(`${context}: "${input.figma}" enum values must be an object`);
+            return;
+        }
+
         validateEnumMapping(input, property, context, errors);
         return;
     }
@@ -273,6 +299,38 @@ function validateUnique(values, label, errors) {
 
         seen.add(value);
     }
+}
+
+function listGeneratedTemplateFiles(generatedDir) {
+    if (!fs.existsSync(generatedDir)) {
+        return [];
+    }
+
+    return fs
+        .readdirSync(generatedDir, {withFileTypes: true})
+        .filter((entry) => entry.isFile() && entry.name.endsWith('.figma.ts'))
+        .map((entry) => path.join(generatedDir, entry.name))
+        .sort();
+}
+
+function isRecord(value) {
+    return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function sortJson(value) {
+    if (Array.isArray(value)) {
+        return value.map((item) => sortJson(item));
+    }
+
+    if (isRecord(value)) {
+        return Object.fromEntries(
+            Object.keys(value)
+                .sort()
+                .map((key) => [key, sortJson(value[key])]),
+        );
+    }
+
+    return value;
 }
 
 function getFigmaProperty(figmaProperties, name) {

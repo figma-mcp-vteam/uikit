@@ -4,6 +4,7 @@ import {
     normalizeFigmaPropertyDefinitions,
     normalizeNodeId,
     readRegistry,
+    stableStringify,
     validateRegistry,
 } from './lib.mjs';
 
@@ -57,8 +58,8 @@ for (const component of registry.components) {
     }
 
     const liveProperties = normalizeFigmaPropertyDefinitions(node.componentPropertyDefinitions);
-    const expected = JSON.stringify(component.figmaProperties);
-    const actual = JSON.stringify(liveProperties);
+    const expected = stableStringify(component.figmaProperties);
+    const actual = stableStringify(liveProperties);
 
     if (actual !== expected) {
         errors.push(`${component.id}: Figma property snapshot is stale`);
