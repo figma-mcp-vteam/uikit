@@ -82,7 +82,7 @@ export default defineConfig([
         },
     },
     {
-        files: ['**/*.js', '!src/**/*'],
+        files: ['**/*.{js,mjs}', '!src/**/*'],
         languageOptions: {
             globals: {
                 ...globals.node,
@@ -99,6 +99,11 @@ export default defineConfig([
         },
     },
     {
-        ignores: ['build', 'storybook-static', 'playwright/.cache*'],
+        ignores: [
+            'build',
+            'storybook-static',
+            'playwright/.cache*',
+            'figma/code-connect/generated',
+        ],
     },
 ]);

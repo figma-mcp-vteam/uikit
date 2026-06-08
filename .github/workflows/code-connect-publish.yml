@@ -1,0 +1,24 @@
+name: Code Connect Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish Code Connect
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - name: Install Packages
+        run: npm ci
+      - name: Publish Code Connect
+        run: npm run code-connect:publish
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}

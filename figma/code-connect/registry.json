@@ -1,0 +1,925 @@
+{
+    "version": 1,
+    "figmaFileKey": "GihZUtevc7oCwpDQrcdR4i",
+    "figmaFileName": "YC-Gravity-UI-Code-connect-test",
+    "components": [
+        {
+            "id": "button",
+            "name": "Button",
+            "generatedFile": "Button.figma.ts",
+            "nodeId": "41899:462118",
+            "source": "src/components/Button/Button.tsx",
+            "importStatement": "import {Button} from '@gravity-ui/uikit';",
+            "figmaProperties": {
+                " ↳ Start icon#2:0": {
+                    "name": "↳ Start icon",
+                    "type": "INSTANCE_SWAP",
+                    "key": " ↳ Start icon#2:0"
+                },
+                "Start icon#2:281": {
+                    "name": "Start icon",
+                    "type": "BOOLEAN",
+                    "key": "Start icon#2:281"
+                },
+                "End icon#2:562": {
+                    "name": "End icon",
+                    "type": "BOOLEAN",
+                    "key": "End icon#2:562"
+                },
+                " ↳ End icon#2:843": {
+                    "name": "↳ End icon",
+                    "type": "INSTANCE_SWAP",
+                    "key": " ↳ End icon#2:843"
+                },
+                "Content#2:1405": {
+                    "name": "Content",
+                    "type": "TEXT",
+                    "key": "Content#2:1405"
+                },
+                "View": {
+                    "name": "View",
+                    "type": "VARIANT",
+                    "key": "View",
+                    "variantOptions": [
+                        "Normal",
+                        "Action",
+                        "Outline",
+                        "Outline-info",
+                        "Outlined-success",
+                        "Outlined-warning",
+                        "Outline-danger",
+                        "Outline-utility",
+                        "Outlined-action",
+                        "Flat",
+                        "Flat-info",
+                        "Flat-success",
+                        "Flat-warning",
+                        "Flat-danger",
+                        "Flat-utility",
+                        "Flat-action",
+                        "Flat-secondary",
+                        "Raised",
+                        "Normal-contrast",
+                        "Outline-contrast",
+                        "Flat-contrast"
+                    ]
+                },
+                "Size": {
+                    "name": "Size",
+                    "type": "VARIANT",
+                    "key": "Size",
+                    "variantOptions": [
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                "State": {
+                    "name": "State",
+                    "type": "VARIANT",
+                    "key": "State",
+                    "variantOptions": [
+                        "Default",
+                        "Hover",
+                        "Disabled",
+                        "Loading",
+                        "Selected",
+                        "Selected hover"
+                    ]
+                },
+                "Icon only": {
+                    "name": "Icon only",
+                    "type": "VARIANT",
+                    "key": "Icon only",
+                    "variantOptions": [
+                        "Off",
+                        "On"
+                    ]
+                }
+            },
+            "inputs": [
+                {
+                    "kind": "enum",
+                    "name": "view",
+                    "figma": "View",
+                    "values": {
+                        "Normal": "normal",
+                        "Action": "action",
+                        "Outline": "outlined",
+                        "Outline-info": "outlined-info",
+                        "Outlined-success": "outlined-success",
+                        "Outlined-warning": "outlined-warning",
+                        "Outline-danger": "outlined-danger",
+                        "Outline-utility": "outlined-utility",
+                        "Outlined-action": "outlined-action",
+                        "Flat": "flat",
+                        "Flat-info": "flat-info",
+                        "Flat-success": "flat-success",
+                        "Flat-warning": "flat-warning",
+                        "Flat-danger": "flat-danger",
+                        "Flat-utility": "flat-utility",
+                        "Flat-action": "flat-action",
+                        "Flat-secondary": "flat-secondary",
+                        "Raised": "raised",
+                        "Normal-contrast": "normal-contrast",
+                        "Outline-contrast": "outlined-contrast",
+                        "Flat-contrast": "flat-contrast"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "XS": "xs",
+                        "S": "s",
+                        "M": "m",
+                        "L": "l",
+                        "XL": "xl"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "state",
+                    "figma": "State",
+                    "values": {
+                        "Default": "Default",
+                        "Hover": "Hover",
+                        "Disabled": "Disabled",
+                        "Loading": "Loading",
+                        "Selected": "Selected",
+                        "Selected hover": "Selected hover"
+                    }
+                },
+                {
+                    "kind": "text",
+                    "name": "children",
+                    "figma": "Content",
+                    "fallback": "Button"
+                }
+            ],
+            "example": {
+                "component": "Button",
+                "props": [
+                    {
+                        "prop": "view",
+                        "value": "view"
+                    },
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "loading",
+                        "value": "state === 'Loading'"
+                    },
+                    {
+                        "prop": "selected",
+                        "value": "state === 'Selected' || state === 'Selected hover'"
+                    }
+                ],
+                "children": "children"
+            }
+        },
+        {
+            "id": "checkbox",
+            "name": "Checkbox",
+            "generatedFile": "Checkbox.figma.ts",
+            "nodeId": "48571:15566",
+            "source": "src/components/Checkbox/Checkbox.tsx",
+            "importStatement": "import {Checkbox} from '@gravity-ui/uikit';",
+            "figmaProperties": {
+                "↳ Content text#45013:38": {
+                    "name": "↳ Content text",
+                    "type": "TEXT",
+                    "key": "↳ Content text#45013:38"
+                },
+                "Content#48571:38": {
+                    "name": "Content",
+                    "type": "BOOLEAN",
+                    "key": "Content#48571:38"
+                },
+                "Size": {
+                    "name": "Size",
+                    "type": "VARIANT",
+                    "key": "Size",
+                    "variantOptions": [
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                "State": {
+                    "name": "State",
+                    "type": "VARIANT",
+                    "key": "State",
+                    "variantOptions": [
+                        "Default",
+                        "Hover",
+                        "Disabled"
+                    ]
+                },
+                "Checked": {
+                    "name": "Checked",
+                    "type": "VARIANT",
+                    "key": "Checked",
+                    "variantOptions": [
+                        "Off",
+                        "On"
+                    ]
+                },
+                "Indeterminate": {
+                    "name": "Indeterminate",
+                    "type": "VARIANT",
+                    "key": "Indeterminate",
+                    "variantOptions": [
+                        "On",
+                        "Off"
+                    ]
+                }
+            },
+            "inputs": [
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "M": "m",
+                        "L": "l",
+                        "XL": "xl"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "state",
+                    "figma": "State",
+                    "values": {
+                        "Default": "Default",
+                        "Hover": "Hover",
+                        "Disabled": "Disabled"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "checked",
+                    "figma": "Checked",
+                    "values": {
+                        "Off": false,
+                        "On": true
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "indeterminate",
+                    "figma": "Indeterminate",
+                    "values": {
+                        "On": true,
+                        "Off": false
+                    }
+                },
+                {
+                    "kind": "boolean",
+                    "name": "contentVisible",
+                    "figma": "Content"
+                },
+                {
+                    "kind": "text",
+                    "name": "contentText",
+                    "figma": "↳ Content text",
+                    "fallback": "Checkbox"
+                }
+            ],
+            "example": {
+                "component": "Checkbox",
+                "props": [
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "checked",
+                        "value": "checked"
+                    },
+                    {
+                        "prop": "indeterminate",
+                        "value": "indeterminate"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "content",
+                        "value": "contentVisible ? contentText : undefined"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "radio",
+            "name": "Radio",
+            "generatedFile": "Radio.figma.ts",
+            "nodeId": "17215:9861",
+            "source": "src/components/Radio/Radio.tsx",
+            "importStatement": "import {Radio} from '@gravity-ui/uikit';",
+            "figmaProperties": {
+                "↳ Content text#41365:0": {
+                    "name": "↳ Content text",
+                    "type": "TEXT",
+                    "key": "↳ Content text#41365:0"
+                },
+                "Content#55334:0": {
+                    "name": "Content",
+                    "type": "BOOLEAN",
+                    "key": "Content#55334:0"
+                },
+                "Size": {
+                    "name": "Size",
+                    "type": "VARIANT",
+                    "key": "Size",
+                    "variantOptions": [
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                "State": {
+                    "name": "State",
+                    "type": "VARIANT",
+                    "key": "State",
+                    "variantOptions": [
+                        "Default",
+                        "Hover",
+                        "Disabled"
+                    ]
+                },
+                "Checked": {
+                    "name": "Checked",
+                    "type": "VARIANT",
+                    "key": "Checked",
+                    "variantOptions": [
+                        "On",
+                        "Off"
+                    ]
+                }
+            },
+            "inputs": [
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "M": "m",
+                        "L": "l",
+                        "XL": "xl"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "state",
+                    "figma": "State",
+                    "values": {
+                        "Default": "Default",
+                        "Hover": "Hover",
+                        "Disabled": "Disabled"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "checked",
+                    "figma": "Checked",
+                    "values": {
+                        "On": true,
+                        "Off": false
+                    }
+                },
+                {
+                    "kind": "boolean",
+                    "name": "contentVisible",
+                    "figma": "Content"
+                },
+                {
+                    "kind": "text",
+                    "name": "contentText",
+                    "figma": "↳ Content text",
+                    "fallback": "Radio"
+                },
+                {
+                    "kind": "literal",
+                    "name": "value",
+                    "value": "value"
+                }
+            ],
+            "example": {
+                "component": "Radio",
+                "props": [
+                    {
+                        "prop": "value",
+                        "value": "value"
+                    },
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "checked",
+                        "value": "checked"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "content",
+                        "value": "contentVisible ? contentText : undefined"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "switch",
+            "name": "Switch",
+            "generatedFile": "Switch.figma.ts",
+            "nodeId": "17215:9968",
+            "source": "src/components/Switch/Switch.tsx",
+            "importStatement": "import {Switch} from '@gravity-ui/uikit';",
+            "figmaProperties": {
+                "Content text#42775:0": {
+                    "name": "Content text",
+                    "type": "TEXT",
+                    "key": "Content text#42775:0"
+                },
+                "Content#42775:11": {
+                    "name": "Content",
+                    "type": "BOOLEAN",
+                    "key": "Content#42775:11"
+                },
+                "Size": {
+                    "name": "Size",
+                    "type": "VARIANT",
+                    "key": "Size",
+                    "variantOptions": [
+                        "M",
+                        "S",
+                        "L"
+                    ]
+                },
+                "State": {
+                    "name": "State",
+                    "type": "VARIANT",
+                    "key": "State",
+                    "variantOptions": [
+                        "Default",
+                        "Hover",
+                        "Disabled",
+                        "Loading"
+                    ]
+                },
+                "Selected": {
+                    "name": "Selected",
+                    "type": "VARIANT",
+                    "key": "Selected",
+                    "variantOptions": [
+                        "False",
+                        "True"
+                    ]
+                }
+            },
+            "inputs": [
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "M": "m",
+                        "S": "s",
+                        "L": "l"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "state",
+                    "figma": "State",
+                    "values": {
+                        "Default": "Default",
+                        "Hover": "Hover",
+                        "Disabled": "Disabled",
+                        "Loading": "Loading"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "checked",
+                    "figma": "Selected",
+                    "values": {
+                        "False": false,
+                        "True": true
+                    }
+                },
+                {
+                    "kind": "boolean",
+                    "name": "contentVisible",
+                    "figma": "Content"
+                },
+                {
+                    "kind": "text",
+                    "name": "contentText",
+                    "figma": "Content text",
+                    "fallback": "Switch"
+                }
+            ],
+            "example": {
+                "component": "Switch",
+                "props": [
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "checked",
+                        "value": "checked"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "loading",
+                        "value": "state === 'Loading'"
+                    },
+                    {
+                        "prop": "content",
+                        "value": "contentVisible ? contentText : undefined"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "label",
+            "name": "Label",
+            "generatedFile": "Label.figma.ts",
+            "nodeId": "77305:21930",
+            "source": "src/components/Label/Label.tsx",
+            "importStatement": "import {Label} from '@gravity-ui/uikit';",
+            "figmaProperties": {
+                "End icon hover#1:0": {
+                    "name": "End icon hover",
+                    "type": "BOOLEAN",
+                    "key": "End icon hover#1:0"
+                },
+                "Value#1:463": {
+                    "name": "Value",
+                    "type": "BOOLEAN",
+                    "key": "Value#1:463"
+                },
+                "End icon#1:464": {
+                    "name": "End icon",
+                    "type": "BOOLEAN",
+                    "key": "End icon#1:464"
+                },
+                "↳ Value text#1:466": {
+                    "name": "↳ Value text",
+                    "type": "TEXT",
+                    "key": "↳ Value text#1:466"
+                },
+                "Key text#1:467": {
+                    "name": "Key text",
+                    "type": "TEXT",
+                    "key": "Key text#1:467"
+                },
+                "↳ End icon#1:2417": {
+                    "name": "↳ End icon",
+                    "type": "INSTANCE_SWAP",
+                    "key": "↳ End icon#1:2417"
+                },
+                "Icon#77305:0": {
+                    "name": "Icon",
+                    "type": "BOOLEAN",
+                    "key": "Icon#77305:0"
+                },
+                "↳ Icon#77305:97": {
+                    "name": "↳ Icon",
+                    "type": "INSTANCE_SWAP",
+                    "key": "↳ Icon#77305:97"
+                },
+                "Size": {
+                    "name": "Size",
+                    "type": "VARIANT",
+                    "key": "Size",
+                    "variantOptions": [
+                        "XS",
+                        "XXS",
+                        "S",
+                        "M"
+                    ]
+                },
+                "Theme": {
+                    "name": "Theme",
+                    "type": "VARIANT",
+                    "key": "Theme",
+                    "variantOptions": [
+                        "Normal",
+                        "Info",
+                        "Success",
+                        "Warning",
+                        "Danger",
+                        "Unknown",
+                        "Utility",
+                        "Clear"
+                    ]
+                },
+                "Hovered": {
+                    "name": "Hovered",
+                    "type": "VARIANT",
+                    "key": "Hovered",
+                    "variantOptions": [
+                        "Off",
+                        "On"
+                    ]
+                },
+                "Icon only": {
+                    "name": "Icon only",
+                    "type": "VARIANT",
+                    "key": "Icon only",
+                    "variantOptions": [
+                        "Off",
+                        "On"
+                    ]
+                }
+            },
+            "inputs": [
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "XS": "xs",
+                        "XXS": "xxs",
+                        "S": "s",
+                        "M": "m"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "theme",
+                    "figma": "Theme",
+                    "values": {
+                        "Normal": "normal",
+                        "Info": "info",
+                        "Success": "success",
+                        "Warning": "warning",
+                        "Danger": "danger",
+                        "Unknown": "unknown",
+                        "Utility": "utility",
+                        "Clear": "clear"
+                    }
+                },
+                {
+                    "kind": "boolean",
+                    "name": "valueVisible",
+                    "figma": "Value"
+                },
+                {
+                    "kind": "text",
+                    "name": "children",
+                    "figma": "Key text",
+                    "fallback": "Label"
+                },
+                {
+                    "kind": "text",
+                    "name": "valueText",
+                    "figma": "↳ Value text",
+                    "fallback": "Value"
+                }
+            ],
+            "example": {
+                "component": "Label",
+                "props": [
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "theme",
+                        "value": "theme"
+                    },
+                    {
+                        "prop": "value",
+                        "value": "valueVisible ? valueText : undefined"
+                    }
+                ],
+                "children": "children"
+            }
+        },
+        {
+            "id": "select",
+            "name": "Select",
+            "generatedFile": "Select.figma.ts",
+            "nodeId": "43749:467962",
+            "source": "src/components/Select/Select.tsx",
+            "importStatement": "import {Select} from '@gravity-ui/uikit';",
+            "figmaProperties": {
+                "Label#43750:0": {
+                    "name": "Label",
+                    "type": "BOOLEAN",
+                    "key": "Label#43750:0"
+                },
+                "↳ Label text#43757:0": {
+                    "name": "↳ Label text",
+                    "type": "TEXT",
+                    "key": "↳ Label text#43757:0"
+                },
+                "Content#43761:0": {
+                    "name": "Content",
+                    "type": "BOOLEAN",
+                    "key": "Content#43761:0"
+                },
+                "↳ Content text#43761:6": {
+                    "name": "↳ Content text",
+                    "type": "TEXT",
+                    "key": "↳ Content text#43761:6"
+                },
+                "Error text#43761:12": {
+                    "name": "Error text",
+                    "type": "TEXT",
+                    "key": "Error text#43761:12"
+                },
+                "Clear icon#44528:0": {
+                    "name": "Clear icon",
+                    "type": "BOOLEAN",
+                    "key": "Clear icon#44528:0"
+                },
+                "Counter#64099:0": {
+                    "name": "Counter",
+                    "type": "BOOLEAN",
+                    "key": "Counter#64099:0"
+                },
+                "↳ Counter value#64099:57": {
+                    "name": "↳ Counter value",
+                    "type": "TEXT",
+                    "key": "↳ Counter value#64099:57"
+                },
+                "Size": {
+                    "name": "Size",
+                    "type": "VARIANT",
+                    "key": "Size",
+                    "variantOptions": [
+                        "S",
+                        "M",
+                        "L",
+                        "XL"
+                    ]
+                },
+                "State": {
+                    "name": "State",
+                    "type": "VARIANT",
+                    "key": "State",
+                    "variantOptions": [
+                        "Suggest",
+                        "Default",
+                        "Hover",
+                        "Disabled",
+                        "Active",
+                        "Error inline",
+                        "Error outline"
+                    ]
+                },
+                "View": {
+                    "name": "View",
+                    "type": "VARIANT",
+                    "key": "View",
+                    "variantOptions": [
+                        "Normal",
+                        "Clear"
+                    ]
+                }
+            },
+            "inputs": [
+                {
+                    "kind": "enum",
+                    "name": "size",
+                    "figma": "Size",
+                    "values": {
+                        "S": "s",
+                        "M": "m",
+                        "L": "l",
+                        "XL": "xl"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "view",
+                    "figma": "View",
+                    "values": {
+                        "Normal": "normal",
+                        "Clear": "clear"
+                    }
+                },
+                {
+                    "kind": "enum",
+                    "name": "state",
+                    "figma": "State",
+                    "values": {
+                        "Suggest": "Suggest",
+                        "Default": "Default",
+                        "Hover": "Hover",
+                        "Disabled": "Disabled",
+                        "Active": "Active",
+                        "Error inline": "Error inline",
+                        "Error outline": "Error outline"
+                    }
+                },
+                {
+                    "kind": "boolean",
+                    "name": "labelVisible",
+                    "figma": "Label"
+                },
+                {
+                    "kind": "boolean",
+                    "name": "contentVisible",
+                    "figma": "Content"
+                },
+                {
+                    "kind": "boolean",
+                    "name": "hasClear",
+                    "figma": "Clear icon"
+                },
+                {
+                    "kind": "text",
+                    "name": "labelText",
+                    "figma": "↳ Label text",
+                    "fallback": "Label"
+                },
+                {
+                    "kind": "text",
+                    "name": "contentText",
+                    "figma": "↳ Content text",
+                    "fallback": "Select"
+                },
+                {
+                    "kind": "text",
+                    "name": "errorText",
+                    "figma": "Error text",
+                    "fallback": "Error"
+                }
+            ],
+            "derived": [
+                {
+                    "name": "isInvalid",
+                    "expression": "state === 'Error inline' || state === 'Error outline'"
+                },
+                {
+                    "name": "errorPlacement",
+                    "expression": "state === 'Error inline' ? 'inside' : 'outside'"
+                }
+            ],
+            "example": {
+                "component": "Select",
+                "props": [
+                    {
+                        "prop": "size",
+                        "value": "size"
+                    },
+                    {
+                        "prop": "view",
+                        "value": "view"
+                    },
+                    {
+                        "prop": "label",
+                        "value": "labelVisible ? labelText : undefined"
+                    },
+                    {
+                        "prop": "placeholder",
+                        "value": "contentVisible ? contentText : undefined"
+                    },
+                    {
+                        "prop": "hasClear",
+                        "value": "hasClear"
+                    },
+                    {
+                        "prop": "disabled",
+                        "value": "state === 'Disabled'"
+                    },
+                    {
+                        "prop": "validationState",
+                        "value": "isInvalid ? 'invalid' : undefined"
+                    },
+                    {
+                        "prop": "errorPlacement",
+                        "value": "isInvalid ? errorPlacement : undefined"
+                    },
+                    {
+                        "prop": "errorMessage",
+                        "value": "isInvalid ? errorText : undefined"
+                    }
+                ]
+            }
+        }
+    ]
+}
