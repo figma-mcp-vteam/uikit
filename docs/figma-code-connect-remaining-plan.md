@@ -1,75 +1,125 @@
-# Остаток работ по Code Connect PoC
+# Остаток работ по Code Connect PoC для YC Gravity UI Code Connect test
 
 ## Summary
 
-GitHub-часть PoC уже поднята в sandbox fork `figma-mcp-vteam/uikit`.
-PR зеленый и готов к merge:
+GitHub-часть PoC поднята и смёржена в sandbox fork `figma-mcp-vteam/uikit`.
+Локальный registry теперь смотрит на рабочий Figma-файл `YC Gravity UI – Code connect test`:
 
-- <https://github.com/figma-mcp-vteam/uikit/pull/1>
-- planning doc из PR удален;
-- registry пока смотрит на seed file `Gravity-UI-MCP-Fun`, а не на `HALF YC Gravity UI`;
-- `FIGMA_ACCESS_TOKEN` в repo secrets пока не добавлен;
-- проверка страницы Button в `HALF YC Gravity UI` вернула `No published components found in this selection`.
+- file key: `5vAAQi3Iwj9tACtMsduGos`;
+- file name: `YC Gravity UI – Code connect test`;
+- source repository: `https://github.com/figma-mcp-vteam/uikit`;
+- source branch: `main`;
+- pilot components: `Checkbox`, `Hotkey`, `Avatar`, `User`, `Card`, `Label`;
+- подтвержденные root component set ids:
+  - `Checkbox` -> `48571:15566`;
+  - `Hotkey` -> `77863:7673`;
+  - `Avatar` -> `41226:428847`;
+  - `User` -> `51015:45880`;
+  - `Card` -> `44798:511299`;
+  - `Label` -> `77305:21930`.
 
-Цель следующего этапа: подключить PoC к реальному Figma-файлу `HALF YC Gravity UI`
-и проверить полный цикл `generate -> check -> sync -> dry-run publish -> publish`.
+Pilot Code Connect templates для этих 6 компонентов локально проверены и опубликованы
+в рабочий Figma-файл 2026-06-08 через `npm run code-connect:publish`.
+После переноса файла registry ретаргетнут на `YC Gravity UI – Code connect test`; старые root ids
+проверены в новом file key через Code Connect context. Tokened `publish:dry-run` и `publish`
+для нового файла прошли успешно.
+Generated templates используют официальный Template API `figma.helpers.react.renderProp` /
+`figma.helpers.react.renderChildren`, без самописного JSX formatter.
+Generated `// source=` публикуется как полный GitHub blob URL, чтобы Figma могла открыть
+конкретный файл в `figma-mcp-vteam/uikit`, а registry при этом хранит локальный source path
+для проверки props. После повторной публикации Figma MCP `get_code_connect_map` для `Checkbox`
+возвращает `source=https://github.com/figma-mcp-vteam/uikit/blob/main/src/components/Checkbox/Checkbox.tsx`.
+
+`Button`, `Radio`, `Switch`, `TextInput` и `Select` временно не входят в pilot registry: в рабочем Figma-файле
+для них пока не подтверждены root component set node ids. Overview-страница содержит
+instances/preview frames, но их нельзя использовать как registry node ids.
+
+## Текущий статус на 2026-06-08
+
+- Предыдущая ветка `feat/mcp-figma-poc` уже смёржена в `main` через PR
+  `https://github.com/figma-mcp-vteam/uikit/pull/1`.
+- Дальнейшая работа перенесена на ветку `feat/code-connect-pilot-on-published-library`,
+  созданную от свежего `origin/main`.
+- Рабочий Figma-файл `YC Gravity UI – Code connect test` опубликован как library;
+  после этого Code Connect UI начал показывать CLI-created connection для `Checkbox`.
+- Figma GitHub integration подключена к `figma-mcp-vteam/uikit`, директория UI-компонентов:
+  `src/components`.
+- `Open in GitHub` и tooltip в Figma теперь указывают на полный source URL вида
+  `https://github.com/figma-mcp-vteam/uikit/blob/main/src/components/Checkbox/Checkbox.tsx`.
+- Figma MCP подтвердил опубликованные mappings для pilot-компонентов:
+  - `Checkbox`: `hasTemplate: true`, import из `@gravity-ui/uikit`, валидные JSX snippets
+    для вариантов `size`, `checked`, `indeterminate`, `disabled`, `content`;
+  - `Hotkey`: `hasTemplate: true`, import из `@gravity-ui/uikit`, snippets с `value`
+    и `platform`;
+  - `Avatar`: `hasTemplate: true`, import из `@gravity-ui/uikit`, snippets с `size`,
+    `view`, `theme`, `text`.
+- Локальная проверка `npm run code-connect:check` прошла полностью:
+  - `node --test tools/code-connect/lib.test.mjs`: 19/19 tests passed;
+  - deterministic generation check passed;
+  - `tsc -p tsconfig.figma.json --noEmit` passed;
+  - `figma connect parse --config figma.config.json --exit-on-unreadable-files` прочитал
+    все 6 generated templates.
+- Первый запуск `code-connect:check` внутри read-only sandbox падал на создании temp dir
+  (`EPERM`), но тот же check прошёл вне sandbox; это ограничение среды, не ошибка PoC.
+- Текущий PoC соответствует технической части гипотезы: AI/MCP получает реальные React
+  компоненты, imports, props и snippets. До полной гипотезы ещё не хватает масштаба:
+  большего покрытия, drift/sync report по всей библиотеке, инструкции для команд и
+  измерения эффекта на 2-3 пилотах.
 
 ## Что осталось сделать
 
-1. Смёржить PR #1 в `main` fork `figma-mcp-vteam/uikit`.
+1. Подключить GitHub-публикацию, если нужен publish из workflow, а не только локально:
 
-2. Подготовить `HALF YC Gravity UI`:
-
-   - опубликовать pilot components как Figma library components;
-   - для `Button`, `Checkbox`, `Radio`, `Switch`, `Label`, `TextInput`, `Select`
-     взять ссылки через `Copy link to selection` именно с root component set;
-   - не использовать page/frame node ids в registry.
-
-3. Подготовить Figma token:
-
-   - создать Figma PAT со scopes `File content: Read` и `Code Connect: Write`;
    - добавить secret в fork:
 
      ```bash
      gh secret set FIGMA_ACCESS_TOKEN --repo figma-mcp-vteam/uikit
      ```
 
-4. Перенастроить registry:
+   - запустить manual workflow `Code Connect Publish`.
 
-   - заменить `figmaFileKey` на `GihZUtevc7oCwpDQrcdR4i`;
-   - заменить `figmaFileName` на `HALF-YC-Gravity-UI`;
-   - заменить node ids pilot components на реальные component set ids;
-   - обновить `figmaProperties` из live Figma metadata;
+2. Расширить registry после подтверждения root ids:
+
+   - вернуть `Button`, `Radio`, `Switch`, `TextInput`, `Select`, когда для них будут реальные root component set ids из рабочего файла;
+   - ссылки брать через `Copy link to selection` именно с root component set;
+   - не использовать page/frame/instance node ids в registry;
+   - обновить `figmaProperties` из live Figma metadata через Code Connect context;
    - оставить маппинг только на реальные UIKit props.
 
-5. Обновить generated templates:
+3. После каждого изменения registry обновлять generated templates:
 
    ```bash
    npm run code-connect:generate
    npm run code-connect:check
    ```
 
-6. Проверить tokened Figma flow:
+4. Перед следующей публикацией повторять tokened Figma flow:
 
    ```bash
    npm run code-connect:sync
    npm run code-connect:publish:dry-run
+   npm run code-connect:publish
    ```
-
-7. После merge в `main` fork запустить manual workflow `Code Connect Publish`.
 
 ## Acceptance
 
-- `figma connect parse` читает все generated templates.
-- `code-connect:sync` подтверждает, что registry совпадает с live Figma metadata.
-- `code-connect:publish:dry-run` проходит без ошибок.
-- Manual workflow `Code Connect Publish` проходит на `main`.
+- Done: `figma connect parse` читает все generated templates.
+- Done: `code-connect:check` проходит локально для всех pilot templates.
+- Done: `code-connect:sync` подтверждает, что registry совпадает с live Figma metadata.
+- Done: `code-connect:publish:dry-run` проходит без ошибок после добавления token.
+- Done: локальный `code-connect:publish` успешно загружает pilot templates в новый Figma-файл.
+- Done: Figma MCP `get_code_connect_map` для `Checkbox` возвращает `hasTemplate: true`, import
+  `@gravity-ui/uikit` и валидный JSX snippet.
+- Done: Figma MCP `get_code_connect_map` для `Hotkey` и `Avatar` возвращает `hasTemplate: true`,
+  GitHub source URL и валидные snippets.
+- Done: В Figma Dev Mode `Checkbox` показывает CLI-created connection с полным GitHub source URL.
+- Manual workflow `Code Connect Publish` проходит на `main`, если нужен publish через GitHub.
 - В Figma Dev Mode pilot components показывают snippets с imports из `@gravity-ui/uikit`.
 
 ## Блокеры и риски
 
-- Если `HALF YC Gravity UI` components не published, Code Connect не увидит их.
 - Если выбран frame/page/instance вместо root component set, registry будет некорректным.
 - Если token не имеет `File content: Read` и `Code Connect: Write`, `sync` или `publish` упадут.
-- Если registry retarget сделать до публикации компонентов, checks без Figma token могут проходить,
-  но publish flow останется непроверенным.
+- Checks без Figma token могут проходить, но `sync` и publish flow не запустятся.
+
+https://www.figma.com/design/5vAAQi3Iwj9tACtMsduGos/YC-Gravity-UI-%E2%80%93-Code-connect-test?node-id=48654-31725&p=f&m=dev

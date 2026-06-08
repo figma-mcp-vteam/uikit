@@ -2,6 +2,7 @@
 .vscode
 .history
 .DS_Store
+.env
 *.log
 
 node_modules

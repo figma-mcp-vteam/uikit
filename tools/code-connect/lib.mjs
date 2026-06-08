@@ -38,6 +38,18 @@ export function getFigmaNodeUrl(registry, component) {
     )}?node-id=${nodeId}`;
 }
 
+export function getCodeSourceUrl(registry, component) {
+    if (!registry.sourceRepositoryUrl) {
+        return component.source;
+    }
+
+    const repositoryUrl = registry.sourceRepositoryUrl.replace(/\.git$/, '').replace(/\/$/, '');
+    const branch = registry.sourceBranch || 'main';
+    const sourcePath = component.source.replaceAll('\\', '/').replace(/^\/+/, '');
+
+    return `${repositoryUrl}/blob/${branch}/${sourcePath}`;
+}
+
 export function normalizeFigmaPropertyDefinitions(definitions = {}) {
     const normalized = {};
 
@@ -77,6 +89,7 @@ export function generateAll(registry, generatedDir = GENERATED_DIR) {
 
 export function generateComponentTemplate(registry, component) {
     const url = getFigmaNodeUrl(registry, component);
+    const source = getCodeSourceUrl(registry, component);
     const inputLines = component.inputs.flatMap((input) => renderInput(input));
     const derivedLines = (component.derived || []).map(
         (derived) => `const ${derived.name} = ${derived.expression};`,
@@ -84,7 +97,7 @@ export function generateComponentTemplate(registry, component) {
 
     return [
         `// url=${url}`,
-        `// source=${component.source}`,
+        `// source=${source}`,
         `// component=${component.name}`,
         "import figma from 'figma';",
         '',
@@ -155,6 +168,18 @@ export function validateRegistry(registry) {
 
     if (!registry.figmaFileKey) {
         errors.push('registry.figmaFileKey is required');
+    }
+
+    if (registry.sourceRepositoryUrl) {
+        try {
+            const url = new URL(registry.sourceRepositoryUrl);
+
+            if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+                errors.push('registry.sourceRepositoryUrl must be an http(s) URL');
+            }
+        } catch {
+            errors.push('registry.sourceRepositoryUrl must be an http(s) URL');
+        }
     }
 
     if (!Array.isArray(registry.components)) {
@@ -483,20 +508,20 @@ function renderObject(values) {
 function renderExample(component) {
     const componentName = component.example.component || component.name;
     const props = component.example.props || [];
-    const propLines = props.map((prop) => `    ${prop.prop}=\${${prop.value}}`);
+    const propFragments = props.map(
+        (prop) => `\${figma.helpers.react.renderProp(${stringLiteral(prop.prop)}, ${prop.value})}`,
+    );
 
     if (component.example.children) {
         return [
             '',
-            `<${componentName}`,
-            ...propLines,
-            '>',
-            `    \${${component.example.children}}`,
+            `<${componentName}${propFragments.join('')}>`,
+            `    \${figma.helpers.react.renderChildren(${component.example.children})}`,
             `</${componentName}>`,
         ].join('\n');
     }
 
-    return ['', `<${componentName}`, ...propLines, '/>'].join('\n');
+    return ['', `<${componentName}${propFragments.join('')} />`].join('\n');
 }
 
 function renderLiteral(value) {

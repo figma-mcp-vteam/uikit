@@ -1,5 +1,5 @@
-// url=https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC-Gravity-UI-Code-connect-test?node-id=77305%3A21930
-// source=src/components/Label/Label.tsx
+// url=https://www.figma.com/design/5vAAQi3Iwj9tACtMsduGos/YC%20Gravity%20UI%20%E2%80%93%20Code%20connect%20test?node-id=77305%3A21930
+// source=https://github.com/figma-mcp-vteam/uikit/blob/main/src/components/Label/Label.tsx
 // component=Label
 import figma from 'figma';
 
@@ -14,12 +14,8 @@ export default {
     id: 'label',
     imports: ["import {Label} from '@gravity-ui/uikit';"],
     example: figma.tsx`
-<Label
-    size=${size}
-    theme=${theme}
-    value=${valueVisible ? valueText : undefined}
->
-    ${children}
+<Label${figma.helpers.react.renderProp('size', size)}${figma.helpers.react.renderProp('theme', theme)}${figma.helpers.react.renderProp('value', valueVisible ? valueText : undefined)}>
+    ${figma.helpers.react.renderChildren(children)}
 </Label>`,
     metadata: {nestable: true},
 };

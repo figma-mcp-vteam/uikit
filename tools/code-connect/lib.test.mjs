@@ -6,6 +6,7 @@ import test from 'node:test';
 
 import {
     generateComponentTemplate,
+    getCodeSourceUrl,
     getFigmaNodeUrl,
     getGeneratedFilePath,
     normalizeFigmaPropertyDefinitions,
@@ -23,21 +24,31 @@ test('normalizes Figma node ids', () => {
 
 test('builds Figma node urls from registry entries', () => {
     const registry = readRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
     assert.equal(
-        getFigmaNodeUrl(registry, button),
-        'https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC-Gravity-UI-Code-connect-test?node-id=41899%3A462118',
+        getFigmaNodeUrl(registry, checkbox),
+        'https://www.figma.com/design/5vAAQi3Iwj9tACtMsduGos/YC%20Gravity%20UI%20%E2%80%93%20Code%20connect%20test?node-id=48571%3A15566',
     );
 });
 
 test('encodes Figma file names in generated node urls', () => {
-    const registry = {...readRegistry(), figmaFileName: 'YC Gravity UI – Code connect test'};
-    const button = registry.components.find((component) => component.id === 'button');
+    const registry = {...readRegistry(), figmaFileName: 'HALF-YC-Gravity-UI'};
+    const checkbox = getSampleComponent(registry);
 
     assert.equal(
-        getFigmaNodeUrl(registry, button),
-        'https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC%20Gravity%20UI%20%E2%80%93%20Code%20connect%20test?node-id=41899%3A462118',
+        getFigmaNodeUrl(registry, checkbox),
+        'https://www.figma.com/design/5vAAQi3Iwj9tACtMsduGos/HALF-YC-Gravity-UI?node-id=48571%3A15566',
+    );
+});
+
+test('builds GitHub source urls for generated templates', () => {
+    const registry = readRegistry();
+    const checkbox = getSampleComponent(registry);
+
+    assert.equal(
+        getCodeSourceUrl(registry, checkbox),
+        'https://github.com/figma-mcp-vteam/uikit/blob/main/src/components/Checkbox/Checkbox.tsx',
     );
 });
 
@@ -73,150 +84,165 @@ test('validates the checked-in registry', () => {
 
 test('rejects non-exhaustive enum mappings', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
-    const viewInput = button.inputs.find((input) => input.name === 'view');
+    const checkbox = getSampleComponent(registry);
+    const sizeInput = checkbox.inputs.find((input) => input.name === 'size');
 
-    delete viewInput.values.Action;
+    delete sizeInput.values.XL;
 
     assert.match(
         validateRegistry(registry).join('\n'),
-        /button: "View" enum mapping mismatch; missing \[Action\], extra \[\]/,
+        /checkbox: "Size" enum mapping mismatch; missing \[XL\], extra \[\]/,
     );
 });
 
 test('rejects missing enum mappings', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
-    const viewInput = button.inputs.find((input) => input.name === 'view');
+    const checkbox = getSampleComponent(registry);
+    const sizeInput = checkbox.inputs.find((input) => input.name === 'size');
 
-    delete viewInput.values;
+    delete sizeInput.values;
 
     assert.match(
         validateRegistry(registry).join('\n'),
-        /button: "View" enum values must be an object/,
+        /checkbox: "Size" enum values must be an object/,
     );
 });
 
 test('rejects missing Figma property snapshots', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
-    button.inputs = [];
-    button.example.props = [];
-    delete button.figmaProperties;
+    checkbox.inputs = [];
+    checkbox.example.props = [];
+    delete checkbox.figmaProperties;
 
     assert.match(
         validateRegistry(registry).join('\n'),
-        /button: figmaProperties must be an object/,
+        /checkbox: figmaProperties must be an object/,
     );
 });
 
 test('rejects generated files outside the generated directory', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
-    button.generatedFile = '../OldButton.figma.ts';
+    checkbox.generatedFile = '../OldCheckbox.figma.ts';
 
     assert.match(
         validateRegistry(registry).join('\n'),
-        /button: generatedFile must be a file name, not a path: \.\.\/OldButton\.figma\.ts/,
+        /checkbox: generatedFile must be a file name, not a path: \.\.\/OldCheckbox\.figma\.ts/,
     );
     assert.throws(
-        () => getGeneratedFilePath(button),
-        /generatedFile must be a file name, not a path: \.\.\/OldButton\.figma\.ts/,
+        () => getGeneratedFilePath(checkbox),
+        /generatedFile must be a file name, not a path: \.\.\/OldCheckbox\.figma\.ts/,
     );
 });
 
 test('rejects source files outside the repository', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
-    button.source = '../../../../../etc/passwd';
+    checkbox.source = '../../../../../etc/passwd';
 
     assert.match(
         validateRegistry(registry).join('\n'),
-        /button: source must stay inside repository root: \.\.\/\.\.\/\.\.\/\.\.\/\.\.\/etc\/passwd/,
+        /checkbox: source must stay inside repository root: \.\.\/\.\.\/\.\.\/\.\.\/\.\.\/etc\/passwd/,
     );
 });
 
 test('rejects malformed inputs without throwing', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
-    button.inputs = {};
+    checkbox.inputs = {};
 
-    assert.match(validateRegistry(registry).join('\n'), /button: inputs must be an array/);
+    assert.match(validateRegistry(registry).join('\n'), /checkbox: inputs must be an array/);
 });
 
 test('rejects missing examples without throwing', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
-    delete button.example;
+    delete checkbox.example;
 
-    assert.match(validateRegistry(registry).join('\n'), /button: example must be an object/);
+    assert.match(validateRegistry(registry).join('\n'), /checkbox: example must be an object/);
 });
 
 test('rejects malformed examples without throwing', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
-    button.example = [];
+    checkbox.example = [];
 
-    assert.match(validateRegistry(registry).join('\n'), /button: example must be an object/);
+    assert.match(validateRegistry(registry).join('\n'), /checkbox: example must be an object/);
 });
 
 test('rejects malformed example props without throwing', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
-    button.example.props = {};
+    checkbox.example.props = {};
 
-    assert.match(validateRegistry(registry).join('\n'), /button: example\.props must be an array/);
+    assert.match(validateRegistry(registry).join('\n'), /checkbox: example\.props must be an array/);
 });
 
 test('rejects generated props that do not exist in code', () => {
     const registry = cloneRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
+    const checkbox = getSampleComponent(registry);
 
-    button.example.props.push({prop: 'state', value: "'disabled'"});
+    checkbox.example.props.push({prop: 'state', value: "'disabled'"});
 
-    assert.match(validateRegistry(registry).join('\n'), /button: unknown code prop "state"/);
+    assert.match(validateRegistry(registry).join('\n'), /checkbox: unknown code prop "state"/);
 });
 
-test('generates the Button template deterministically', () => {
+test('generates the Checkbox template deterministically', () => {
     const registry = readRegistry();
-    const button = registry.components.find((component) => component.id === 'button');
-    const output = generateComponentTemplate(registry, button);
+    const checkbox = getSampleComponent(registry);
+    const output = generateComponentTemplate(registry, checkbox);
 
-    assert.match(output, /id: 'button'/);
-    assert.match(output, /import \{Button\} from '@gravity-ui\/uikit';/);
-    assert.ok(output.includes('view=${view}'));
-    assert.ok(output.includes("disabled=${state === 'Disabled'}"));
-    assert.ok(output.includes("selected=${state === 'Selected' || state === 'Selected hover'}"));
-    assert.doesNotMatch(output, /iconOnly/);
+    assert.match(output, /id: 'checkbox'/);
+    assert.ok(
+        output.includes(
+            '// source=https://github.com/figma-mcp-vteam/uikit/blob/main/src/components/Checkbox/Checkbox.tsx',
+        ),
+    );
+    assert.match(output, /import \{Checkbox\} from '@gravity-ui\/uikit';/);
+    assert.ok(output.includes("${figma.helpers.react.renderProp('checked', checked)}"));
+    assert.ok(output.includes("${figma.helpers.react.renderProp('indeterminate', indeterminate)}"));
+    assert.ok(output.includes("${figma.helpers.react.renderProp('disabled', state === 'Disabled')}"));
+    assert.ok(
+        output.includes(
+            "${figma.helpers.react.renderProp('content', contentVisible ? contentText : undefined)}",
+        ),
+    );
+    assert.doesNotMatch(output, /function renderReactProp/);
+    assert.doesNotMatch(output, /type ReactPropValue/);
 });
 
 test('reports and removes unexpected generated templates', () => {
     const generatedDir = fs.mkdtempSync(path.join(os.tmpdir(), 'code-connect-generated-'));
     const registry = cloneRegistry();
 
-    registry.components = [registry.components.find((component) => component.id === 'button')];
+    registry.components = [getSampleComponent(registry)];
 
     writeGeneratedFiles(registry, {generatedDir});
-    fs.writeFileSync(path.join(generatedDir, 'OldButton.figma.ts'), '');
+    fs.writeFileSync(path.join(generatedDir, 'OldCheckbox.figma.ts'), '');
 
     assert.deepEqual(
         writeGeneratedFiles(registry, {check: true, generatedDir}).map((filePath) =>
             path.basename(filePath),
         ),
-        ['OldButton.figma.ts'],
+        ['OldCheckbox.figma.ts'],
     );
 
     writeGeneratedFiles(registry, {generatedDir});
 
-    assert.equal(fs.existsSync(path.join(generatedDir, 'OldButton.figma.ts')), false);
+    assert.equal(fs.existsSync(path.join(generatedDir, 'OldCheckbox.figma.ts')), false);
 });
+
+function getSampleComponent(registry) {
+    return registry.components.find((component) => component.id === 'checkbox');
+}
 
 function cloneRegistry() {
     return JSON.parse(JSON.stringify(readRegistry()));
