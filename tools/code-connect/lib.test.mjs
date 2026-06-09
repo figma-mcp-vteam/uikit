@@ -5,14 +5,19 @@ import path from 'node:path';
 import test from 'node:test';
 
 import {
+    CODE_CONNECT_SYNC_COMMENT_MARKER,
+    createFigmaSyncReport,
     formatFigmaPropertyDefinitionDiffs,
+    formatFigmaSyncReport,
     generateComponentTemplate,
     getCodeSourceUrl,
     getFigmaNodeUrl,
     getGeneratedFilePath,
+    getFigmaSyncExitCode,
     normalizeFigmaPropertyDefinitions,
     normalizeNodeId,
     readRegistry,
+    renderFigmaSyncComment,
     stableStringify,
     validateRegistry,
     writeGeneratedFiles,
@@ -112,6 +117,109 @@ test('formats actionable Figma property snapshot diffs', () => {
             "  - 'Size' variant options mismatch: missing in Figma [XL], extra in Figma [XXL]",
         ],
     );
+});
+
+test('builds ok Figma sync reports from live node data', () => {
+    const registry = cloneRegistry();
+    const checkbox = getSampleComponent(registry);
+
+    registry.components = [checkbox];
+
+    assert.deepEqual(
+        createFigmaSyncReport(registry, {
+            [normalizeNodeId(checkbox.nodeId)]: {
+                document: {
+                    type: 'COMPONENT_SET',
+                    componentPropertyDefinitions: checkbox.figmaProperties,
+                },
+            },
+        }),
+        {
+            status: 'ok',
+            componentsChecked: 1,
+            messages: [],
+        },
+    );
+});
+
+test('builds drift Figma sync reports from stale property snapshots', () => {
+    const registry = cloneRegistry();
+    const checkbox = getSampleComponent(registry);
+
+    registry.components = [checkbox];
+
+    const liveProperties = JSON.parse(JSON.stringify(checkbox.figmaProperties));
+    liveProperties.Size.variantOptions = ['M', 'L', 'XXL'];
+
+    assert.deepEqual(
+        createFigmaSyncReport(registry, {
+            [normalizeNodeId(checkbox.nodeId)]: {
+                document: {
+                    type: 'COMPONENT_SET',
+                    componentPropertyDefinitions: liveProperties,
+                },
+            },
+        }),
+        {
+            status: 'drift',
+            componentsChecked: 1,
+            messages: [
+                'checkbox: Figma property snapshot is stale',
+                "  - 'Size' variant options mismatch: missing in Figma [XL], extra in Figma [XXL]",
+            ],
+        },
+    );
+});
+
+test('builds error Figma sync reports when registered nodes are missing', () => {
+    const registry = cloneRegistry();
+    const checkbox = getSampleComponent(registry);
+
+    registry.components = [checkbox];
+
+    assert.deepEqual(createFigmaSyncReport(registry, {}), {
+        status: 'error',
+        componentsChecked: 0,
+        messages: ['checkbox: node 48571:15566 was not found in Figma'],
+    });
+});
+
+test('formats Figma sync reports as JSON', () => {
+    assert.equal(
+        formatFigmaSyncReport(
+            {
+                status: 'ok',
+                componentsChecked: 1,
+                messages: [],
+            },
+            {format: 'json'},
+        ),
+        '{\n  "status": "ok",\n  "componentsChecked": 1,\n  "messages": []\n}\n',
+    );
+});
+
+test('renders a sticky Figma sync PR comment for drift reports', () => {
+    const comment = renderFigmaSyncComment({
+        status: 'drift',
+        componentsChecked: 1,
+        messages: [
+            'checkbox: Figma property snapshot is stale',
+            "  - 'Size' variant options mismatch: missing in Figma [XL], extra in Figma [XXL]",
+        ],
+    });
+
+    assert.match(comment, new RegExp(CODE_CONNECT_SYNC_COMMENT_MARKER));
+    assert.match(comment, /Code Connect ↔ Figma drift detected/);
+    assert.match(comment, /checkbox: Figma property snapshot is stale/);
+    assert.match(comment, /update `figma\/code-connect\/registry\.json`/);
+    assert.match(comment, /fix the Figma component properties/);
+});
+
+test('keeps drift non-blocking only when requested', () => {
+    assert.equal(getFigmaSyncExitCode({status: 'ok'}, {failOnDrift: true}), 0);
+    assert.equal(getFigmaSyncExitCode({status: 'drift'}, {failOnDrift: true}), 1);
+    assert.equal(getFigmaSyncExitCode({status: 'drift'}, {failOnDrift: false}), 0);
+    assert.equal(getFigmaSyncExitCode({status: 'error'}, {failOnDrift: false}), 1);
 });
 
 test('validates the checked-in registry', () => {

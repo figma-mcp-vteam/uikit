@@ -17,6 +17,14 @@ export {
 export {getComponentProps} from './code-props.mjs';
 export {readJson, readRegistry, validateRegistry} from './registry.mjs';
 export {
+    CODE_CONNECT_SYNC_COMMENT_MARKER,
+    createFigmaSyncErrorReport,
+    createFigmaSyncReport,
+    formatFigmaSyncReport,
+    getFigmaSyncExitCode,
+    renderFigmaSyncComment,
+} from './sync-report.mjs';
+export {
     generateAll,
     generateComponentTemplate,
     getCodeSourceUrl,
