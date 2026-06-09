@@ -19,7 +19,9 @@ try {
     const token = process.env.FIGMA_ACCESS_TOKEN;
 
     if (!token) {
-        report = createFigmaSyncErrorReport('FIGMA_ACCESS_TOKEN is required for Code Connect sync.');
+        report = createFigmaSyncErrorReport(
+            'FIGMA_ACCESS_TOKEN is required for Code Connect sync.',
+        );
         finish(report, options);
     }
 

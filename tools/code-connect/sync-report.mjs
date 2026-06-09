@@ -1,4 +1,7 @@
-import {formatFigmaPropertyDefinitionDiffs, normalizeFigmaPropertyDefinitions} from './figma-properties.mjs';
+import {
+    formatFigmaPropertyDefinitionDiffs,
+    normalizeFigmaPropertyDefinitions,
+} from './figma-properties.mjs';
 import {normalizeNodeId} from './template-generator.mjs';
 
 export const CODE_CONNECT_SYNC_COMMENT_MARKER = '<!-- code-connect-sync -->';
@@ -39,10 +42,18 @@ export function createFigmaSyncReport(registry, nodesById = {}) {
     }
 
     return {
-        status: hasError ? 'error' : messages.length > 0 ? 'drift' : 'ok',
+        status: getFigmaSyncStatus({hasError, messages}),
         componentsChecked,
         messages,
     };
+}
+
+function getFigmaSyncStatus({hasError, messages}) {
+    if (hasError) {
+        return 'error';
+    }
+
+    return messages.length > 0 ? 'drift' : 'ok';
 }
 
 export function createFigmaSyncErrorReport(messages, componentsChecked = 0) {
