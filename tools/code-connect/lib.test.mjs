@@ -5,6 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 import {
+    formatFigmaPropertyDefinitionDiffs,
     generateComponentTemplate,
     getCodeSourceUrl,
     getFigmaNodeUrl,
@@ -78,8 +79,56 @@ test('stable stringifies objects independent of key insertion order', () => {
     );
 });
 
+test('formats actionable Figma property snapshot diffs', () => {
+    assert.deepEqual(
+        formatFigmaPropertyDefinitionDiffs(
+            'checkbox',
+            {
+                Size: {
+                    name: 'Size',
+                    type: 'VARIANT',
+                    key: 'Size',
+                    variantOptions: ['M', 'L', 'XL'],
+                },
+                Checked: {name: 'Checked', type: 'VARIANT', key: 'Checked'},
+                'Content#1:2': {name: 'Content', type: 'BOOLEAN', key: 'Content#1:2'},
+            },
+            {
+                Size: {
+                    name: 'Size',
+                    type: 'VARIANT',
+                    key: 'Size',
+                    variantOptions: ['M', 'L', 'XXL'],
+                },
+                Checked: {name: 'Checked', type: 'BOOLEAN', key: 'Checked'},
+                'Label#1:3': {name: 'Label', type: 'TEXT', key: 'Label#1:3'},
+            },
+        ),
+        [
+            'checkbox: Figma property snapshot is stale',
+            '  - missing in Figma: \'Content#1:2\' (BOOLEAN "Content")',
+            '  - extra in Figma: \'Label#1:3\' (TEXT "Label")',
+            "  - 'Checked' type mismatch: expected VARIANT, got BOOLEAN",
+            "  - 'Size' variant options mismatch: missing in Figma [XL], extra in Figma [XXL]",
+        ],
+    );
+});
+
 test('validates the checked-in registry', () => {
     assert.deepEqual(validateRegistry(readRegistry()), []);
+});
+
+test('requires source repository metadata for generated source urls', () => {
+    const registry = cloneRegistry();
+
+    delete registry.sourceRepositoryUrl;
+    delete registry.sourceBranch;
+
+    assert.match(
+        validateRegistry(registry).join('\n'),
+        /registry\.sourceRepositoryUrl is required/,
+    );
+    assert.match(validateRegistry(registry).join('\n'), /registry\.sourceBranch is required/);
 });
 
 test('rejects non-exhaustive enum mappings', () => {
@@ -183,7 +232,10 @@ test('rejects malformed example props without throwing', () => {
 
     checkbox.example.props = {};
 
-    assert.match(validateRegistry(registry).join('\n'), /checkbox: example\.props must be an array/);
+    assert.match(
+        validateRegistry(registry).join('\n'),
+        /checkbox: example\.props must be an array/,
+    );
 });
 
 test('rejects generated props that do not exist in code', () => {
@@ -209,7 +261,9 @@ test('generates the Checkbox template deterministically', () => {
     assert.match(output, /import \{Checkbox\} from '@gravity-ui\/uikit';/);
     assert.ok(output.includes("${figma.helpers.react.renderProp('checked', checked)}"));
     assert.ok(output.includes("${figma.helpers.react.renderProp('indeterminate', indeterminate)}"));
-    assert.ok(output.includes("${figma.helpers.react.renderProp('disabled', state === 'Disabled')}"));
+    assert.ok(
+        output.includes("${figma.helpers.react.renderProp('disabled', state === 'Disabled')}"),
+    );
     assert.ok(
         output.includes(
             "${figma.helpers.react.renderProp('content', contentVisible ? contentText : undefined)}",

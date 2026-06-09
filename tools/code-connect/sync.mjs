@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import {
+    formatFigmaPropertyDefinitionDiffs,
     normalizeFigmaPropertyDefinitions,
     normalizeNodeId,
     readRegistry,
-    stableStringify,
     validateRegistry,
 } from './lib.mjs';
 
@@ -58,12 +58,13 @@ for (const component of registry.components) {
     }
 
     const liveProperties = normalizeFigmaPropertyDefinitions(node.componentPropertyDefinitions);
-    const expected = stableStringify(component.figmaProperties);
-    const actual = stableStringify(liveProperties);
-
-    if (actual !== expected) {
-        errors.push(`${component.id}: Figma property snapshot is stale`);
-    }
+    errors.push(
+        ...formatFigmaPropertyDefinitionDiffs(
+            component.id,
+            component.figmaProperties,
+            liveProperties,
+        ),
+    );
 }
 
 if (errors.length > 0) {

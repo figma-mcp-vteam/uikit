@@ -29,6 +29,14 @@ Generated `// source=` публикуется как полный GitHub blob UR
 конкретный файл в `figma-mcp-vteam/uikit`, а registry при этом хранит локальный source path
 для проверки props. После повторной публикации Figma MCP `get_code_connect_map` для `Checkbox`
 возвращает `source=https://github.com/figma-mcp-vteam/uikit/blob/main/src/components/Checkbox/Checkbox.tsx`.
+Code Connect workflow использует официальный `@figma/code-connect` CLI `1.4.7`.
+Проверки разделены на tokenless local gate и tokened Figma gate:
+`code-connect:check` не требует токен, а `code-connect:sync`, `code-connect:preview`,
+`code-connect:validate:figma`, `code-connect:publish:dry-run` и `code-connect:publish`
+требуют `FIGMA_ACCESS_TOKEN`.
+`code-connect:preview` оставлен как отдельная post-publish/ad hoc диагностика: в CLI `1.4.7`
+он может вернуть `No published Code Connect templates found for this node` до публикации
+Code Connect docs, поэтому не входит в blocking pre-publish gate.
 
 `Button`, `Radio`, `Switch`, `TextInput` и `Select` временно не входят в pilot registry: в рабочем Figma-файле
 для них пока не подтверждены root component set node ids. Overview-страница содержит
@@ -54,11 +62,16 @@ instances/preview frames, но их нельзя использовать как
   - `Avatar`: `hasTemplate: true`, import из `@gravity-ui/uikit`, snippets с `size`,
     `view`, `theme`, `text`.
 - Локальная проверка `npm run code-connect:check` прошла полностью:
-  - `node --test tools/code-connect/lib.test.mjs`: 19/19 tests passed;
+  - `node --test tools/code-connect/lib.test.mjs`: 21/21 tests passed;
   - deterministic generation check passed;
   - `tsc -p tsconfig.figma.json --noEmit` passed;
   - `figma connect parse --config figma.config.json --exit-on-unreadable-files` прочитал
     все 6 generated templates.
+- Hardening workflow добавляет `code-connect:preview` и `code-connect:validate:figma`:
+  preview доступен для проверки published snippets, а validate выполняет
+  `sync + publish --dry-run` перед реальным publish.
+- `code-connect:sync` теперь должен показывать actionable drift details:
+  missing/extra properties, type mismatch и variant option mismatch.
 - Первый запуск `code-connect:check` внутри read-only sandbox падал на создании temp dir
   (`EPERM`), но тот же check прошёл вне sandbox; это ограничение среды, не ошибка PoC.
 - Текущий PoC соответствует технической части гипотезы: AI/MCP получает реальные React
@@ -93,11 +106,17 @@ instances/preview frames, но их нельзя использовать как
    npm run code-connect:check
    ```
 
-4. Перед следующей публикацией повторять tokened Figma flow:
+4. Перед следующей публикацией повторять tokened Figma validation:
 
    ```bash
    npm run code-connect:sync
+   npm run code-connect:validate:figma
    npm run code-connect:publish:dry-run
+   ```
+
+5. Реальный publish запускать только после явного подтверждения:
+
+   ```bash
    npm run code-connect:publish
    ```
 
@@ -113,6 +132,8 @@ instances/preview frames, но их нельзя использовать как
 - Done: Figma MCP `get_code_connect_map` для `Hotkey` и `Avatar` возвращает `hasTemplate: true`,
   GitHub source URL и валидные snippets.
 - Done: В Figma Dev Mode `Checkbox` показывает CLI-created connection с полным GitHub source URL.
+- `code-connect:preview` используется как post-publish/ad hoc проверка snippets.
+- `code-connect:validate:figma` проходит перед publish и включает `sync` и `publish --dry-run`.
 - Manual workflow `Code Connect Publish` проходит на `main`, если нужен publish через GitHub.
 - В Figma Dev Mode pilot components показывают snippets с imports из `@gravity-ui/uikit`.
 
