@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -6,6 +7,7 @@ import test from 'node:test';
 
 import {
     CODE_CONNECT_SYNC_COMMENT_MARKER,
+    ROOT_DIR,
     createFigmaSyncReport,
     formatFigmaPropertyDefinitionDiffs,
     formatFigmaSyncReport,
@@ -213,6 +215,71 @@ test('renders a sticky Figma sync PR comment for drift reports', () => {
     assert.match(comment, /checkbox: Figma property snapshot is stale/);
     assert.match(comment, /update `figma\/code-connect\/registry\.json`/);
     assert.match(comment, /fix the Figma component properties/);
+});
+
+test('renders a Figma sync PR comment from a JSON report file', () => {
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'code-connect-sync-comment-'));
+    const reportPath = path.join(outputDir, 'report.json');
+    const commentPath = path.join(outputDir, 'comment.md');
+
+    fs.writeFileSync(
+        reportPath,
+        JSON.stringify({
+            status: 'drift',
+            componentsChecked: 1,
+            messages: ['checkbox: Figma property snapshot is stale'],
+        }),
+    );
+
+    const stdout = execFileSync(
+        process.execPath,
+        [
+            path.join(ROOT_DIR, 'tools/code-connect/render-sync-comment.mjs'),
+            reportPath,
+            commentPath,
+        ],
+        {encoding: 'utf8'},
+    );
+    const comment = fs.readFileSync(commentPath, 'utf8');
+
+    assert.equal(stdout, 'drift\n');
+    assert.match(comment, new RegExp(CODE_CONNECT_SYNC_COMMENT_MARKER));
+    assert.match(comment, /Code Connect ↔ Figma drift detected/);
+    assert.match(comment, /checkbox: Figma property snapshot is stale/);
+});
+
+test('rejects malformed Figma sync report files', () => {
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'code-connect-sync-comment-'));
+    const reportPath = path.join(outputDir, 'report.json');
+    const commentPath = path.join(outputDir, 'comment.md');
+    let error;
+
+    fs.writeFileSync(
+        reportPath,
+        JSON.stringify({
+            status: 'unknown',
+            componentsChecked: 1,
+            messages: [],
+        }),
+    );
+
+    try {
+        execFileSync(
+            process.execPath,
+            [
+                path.join(ROOT_DIR, 'tools/code-connect/render-sync-comment.mjs'),
+                reportPath,
+                commentPath,
+            ],
+            {encoding: 'utf8', stdio: 'pipe'},
+        );
+    } catch (caught) {
+        error = caught;
+    }
+
+    assert.ok(error);
+    assert.equal(error.status, 1);
+    assert.match(error.stderr.toString(), /Unsupported sync report status: unknown/);
 });
 
 test('keeps drift non-blocking only when requested', () => {

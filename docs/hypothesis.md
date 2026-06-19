@@ -43,11 +43,14 @@ R&D-задачи, Тиражируемые подходы и вклад в об�
 - publish/parse/preview — через официальный `@figma/code-connect` CLI;
 - snippets — через официальный Template API `figma.helpers.react.renderProp` и `renderChildren`;
 - проверка рассинхрона — отдельный `sync-check` по live Figma component metadata и локальному registry;
+- автоматизация проверяет и репортит drift, но не делает скрытую перегенерацию checked-in артефактов;
 - внешние генераторы, `Code Connect UI` как основной источник связей и custom parser не входят в ближайший PR.
 
 Такой выбор нужен не ради самих generated files, а ради воспроизводимого процесса:
 одинаковый registry можно проверить локально, пересобрать, сравнить с Figma, preview-нуть snippets,
 опубликовать через CLI и затем дать MCP/AI-агенту ссылку на реальные React-компоненты, imports и props.
+Локальная freshness-проверка входит в общий `typecheck`, а tokened GitHub workflow сравнивает
+registry с live Figma metadata и оставляет sticky PR comment при drift/error.
 `figma connect preview` при этом остаётся дополнительной проверкой published snippets, а не
 обязательным pre-publish gate.
 

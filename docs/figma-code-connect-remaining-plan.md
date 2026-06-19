@@ -34,6 +34,13 @@ Code Connect workflow использует официальный `@figma/code-c
 `code-connect:check` не требует токен, а `code-connect:sync`, `code-connect:preview`,
 `code-connect:validate:figma`, `code-connect:publish:dry-run` и `code-connect:publish`
 требуют `FIGMA_ACCESS_TOKEN`.
+`npm run typecheck` включает tokenless `code-connect:check`, поэтому stale
+`generated/*.figma.ts` падают на общем typecheck-gate, а не только отдельным CI-шагом.
+PR workflow `.github/workflows/code-connect-sync.yml` остаётся tokened live Figma gate:
+он запускает `code-connect:sync`, рендерит markdown через
+`tools/code-connect/render-sync-comment.mjs` и публикует/удаляет sticky PR comment через
+`marocchino/sticky-pull-request-comment@v3`. Drift не валит PR, но оставляет actionable
+comment; infrastructure errors (`FIGMA_ACCESS_TOKEN`, Figma API, missing report/node) валят job.
 `code-connect:preview` оставлен как отдельная post-publish/ad hoc диагностика: в CLI `1.4.7`
 он может вернуть `No published Code Connect templates found for this node` до публикации
 Code Connect docs, поэтому не входит в blocking pre-publish gate.
@@ -62,16 +69,22 @@ instances/preview frames, но их нельзя использовать как
   - `Avatar`: `hasTemplate: true`, import из `@gravity-ui/uikit`, snippets с `size`,
     `view`, `theme`, `text`.
 - Локальная проверка `npm run code-connect:check` прошла полностью:
-  - `node --test tools/code-connect/lib.test.mjs`: 21/21 tests passed;
+  - `node --test tools/code-connect/lib.test.mjs`: 29/29 tests passed;
   - deterministic generation check passed;
   - `tsc -p tsconfig.figma.json --noEmit` passed;
   - `figma connect parse --config figma.config.json --exit-on-unreadable-files` прочитал
     все 6 generated templates.
+- `npm run typecheck` теперь выполняет обычный `tsc --noEmit`, а затем
+  `npm run code-connect:check`; это делает freshness `registry.json -> generated/*.figma.ts`
+  частью общего typecheck-gate.
 - Hardening workflow добавляет `code-connect:preview` и `code-connect:validate:figma`:
   preview доступен для проверки published snippets, а validate выполняет
   `sync + publish --dry-run` перед реальным publish.
 - `code-connect:sync` теперь должен показывать actionable drift details:
   missing/extra properties, type mismatch и variant option mismatch.
+- `code-connect-sync.yml` больше не содержит inline GitHub API script для PR comments:
+  sticky comment lifecycle вынесен в `marocchino/sticky-pull-request-comment@v3`, а формат
+  комментария остаётся в локальном renderer-е `tools/code-connect/render-sync-comment.mjs`.
 - Первый запуск `code-connect:check` внутри read-only sandbox падал на создании temp dir
   (`EPERM`), но тот же check прошёл вне sandbox; это ограничение среды, не ошибка PoC.
 - Текущий PoC соответствует технической части гипотезы: AI/MCP получает реальные React
@@ -124,7 +137,10 @@ instances/preview frames, но их нельзя использовать как
 
 - Done: `figma connect parse` читает все generated templates.
 - Done: `code-connect:check` проходит локально для всех pilot templates.
+- Done: `npm run typecheck` включает `code-connect:check` и ловит stale generated templates.
 - Done: `code-connect:sync` подтверждает, что registry совпадает с live Figma metadata.
+- Done: PR sync workflow публикует drift/error через sticky PR comment action и удаляет
+  комментарий при `ok`.
 - Done: `code-connect:publish:dry-run` проходит без ошибок после добавления token.
 - Done: локальный `code-connect:publish` успешно загружает pilot templates в новый Figma-файл.
 - Done: Figma MCP `get_code_connect_map` для `Checkbox` возвращает `hasTemplate: true`, import

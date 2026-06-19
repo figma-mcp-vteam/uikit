@@ -18,8 +18,7 @@ on:
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: read
+  pull-requests: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -49,6 +48,7 @@ jobs:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
         run: |
           report="$RUNNER_TEMP/code-connect-sync-report.json"
+          comment="$RUNNER_TEMP/code-connect-sync-comment.md"
           set +e
           npm run code-connect:sync -- --format=json --output "$report" --no-fail-on-drift
           exit_code=$?
@@ -56,69 +56,29 @@ jobs:
 
           if [ ! -s "$report" ]; then
             printf '{"status":"error","componentsChecked":0,"messages":["code-connect:sync did not produce a JSON report"]}\n' > "$report"
+            exit_code=1
           fi
+
+          status="$(node tools/code-connect/render-sync-comment.mjs "$report" "$comment")"
 
           echo "exit_code=$exit_code" >> "$GITHUB_OUTPUT"
           echo "report=$report" >> "$GITHUB_OUTPUT"
+          echo "comment=$comment" >> "$GITHUB_OUTPUT"
+          echo "status=$status" >> "$GITHUB_OUTPUT"
 
       - name: Update PR comment
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        env:
-          REPORT_PATH: ${{ steps.sync.outputs.report }}
+        if: github.event_name == 'pull_request' && steps.sync.outputs.status != 'ok'
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
-          script: |
-            const fs = require('node:fs');
-            const {pathToFileURL} = require('node:url');
+          header: code-connect-sync
+          path: ${{ steps.sync.outputs.comment }}
 
-            const report = JSON.parse(fs.readFileSync(process.env.REPORT_PATH, 'utf8'));
-            const {
-              CODE_CONNECT_SYNC_COMMENT_MARKER,
-              renderFigmaSyncComment,
-            } = await import(pathToFileURL(`${process.env.GITHUB_WORKSPACE}/tools/code-connect/lib.mjs`).href);
-
-            const {owner, repo} = context.repo;
-            const issue_number = context.payload.pull_request.number;
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner,
-              repo,
-              issue_number,
-              per_page: 100,
-            });
-            const existing = comments.find((comment) =>
-              comment.body?.includes(CODE_CONNECT_SYNC_COMMENT_MARKER),
-            );
-
-            if (report.status === 'ok') {
-              if (existing) {
-                await github.rest.issues.deleteComment({
-                  owner,
-                  repo,
-                  comment_id: existing.id,
-                });
-              }
-
-              core.info('No Code Connect drift detected.');
-              return;
-            }
-
-            const body = renderFigmaSyncComment(report);
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner,
-                repo,
-                comment_id: existing.id,
-                body,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body,
-              });
-            }
+      - name: Delete PR comment
+        if: github.event_name == 'pull_request' && steps.sync.outputs.status == 'ok'
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          header: code-connect-sync
+          delete: true
 
       - name: Fail on sync infrastructure errors
         if: steps.sync.outputs.exit_code != '0'
