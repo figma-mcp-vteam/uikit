@@ -217,6 +217,17 @@ test('renders a sticky Figma sync PR comment for drift reports', () => {
     assert.match(comment, /fix the Figma component properties/);
 });
 
+test('does not render a sticky Figma sync PR comment for ok reports', () => {
+    assert.equal(
+        renderFigmaSyncComment({
+            status: 'ok',
+            componentsChecked: 1,
+            messages: [],
+        }),
+        '',
+    );
+});
+
 test('renders a Figma sync PR comment from a JSON report file', () => {
     const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'code-connect-sync-comment-'));
     const reportPath = path.join(outputDir, 'report.json');
@@ -246,6 +257,35 @@ test('renders a Figma sync PR comment from a JSON report file', () => {
     assert.match(comment, new RegExp(CODE_CONNECT_SYNC_COMMENT_MARKER));
     assert.match(comment, /Code Connect ↔ Figma drift detected/);
     assert.match(comment, /checkbox: Figma property snapshot is stale/);
+});
+
+test('writes no Figma sync PR comment from an ok JSON report file', () => {
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'code-connect-sync-comment-'));
+    const reportPath = path.join(outputDir, 'report.json');
+    const commentPath = path.join(outputDir, 'comment.md');
+
+    fs.writeFileSync(
+        reportPath,
+        JSON.stringify({
+            status: 'ok',
+            componentsChecked: 1,
+            messages: [],
+        }),
+    );
+
+    const stdout = execFileSync(
+        process.execPath,
+        [
+            path.join(ROOT_DIR, 'tools/code-connect/render-sync-comment.mjs'),
+            reportPath,
+            commentPath,
+        ],
+        {encoding: 'utf8'},
+    );
+    const comment = fs.readFileSync(commentPath, 'utf8');
+
+    assert.equal(stdout, 'ok\n');
+    assert.equal(comment, '');
 });
 
 test('rejects malformed Figma sync report files', () => {
@@ -291,6 +331,10 @@ test('keeps drift non-blocking only when requested', () => {
 
 test('validates the checked-in registry', () => {
     assert.deepEqual(validateRegistry(readRegistry()), []);
+});
+
+test('rejects non-object registries without throwing', () => {
+    assert.deepEqual(validateRegistry(null), ['registry must be an object']);
 });
 
 test('requires source repository metadata for generated source urls', () => {
@@ -381,6 +425,15 @@ test('rejects malformed inputs without throwing', () => {
     checkbox.inputs = {};
 
     assert.match(validateRegistry(registry).join('\n'), /checkbox: inputs must be an array/);
+});
+
+test('rejects malformed input entries without throwing', () => {
+    const registry = cloneRegistry();
+    const checkbox = getSampleComponent(registry);
+
+    checkbox.inputs = [null];
+
+    assert.match(validateRegistry(registry).join('\n'), /checkbox: input must be an object/);
 });
 
 test('rejects missing examples without throwing', () => {

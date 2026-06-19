@@ -22,6 +22,11 @@ export function readRegistry(filePath = REGISTRY_PATH) {
 export function validateRegistry(registry) {
     const errors = [];
 
+    if (!isRecord(registry)) {
+        errors.push('registry must be an object');
+        return errors;
+    }
+
     if (registry.version !== 1) {
         errors.push('registry.version must be 1');
     }
@@ -134,6 +139,11 @@ function validateComponent(component, errors) {
 }
 
 function validateInput(input, figmaProperties, context, errors) {
+    if (!isRecord(input)) {
+        errors.push(`${context}: input must be an object`);
+        return;
+    }
+
     if (input.kind === 'literal') {
         return;
     }

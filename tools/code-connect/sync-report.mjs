@@ -85,6 +85,10 @@ export function getFigmaSyncExitCode(report, {failOnDrift = true} = {}) {
 }
 
 export function renderFigmaSyncComment(report) {
+    if (report.status === 'ok') {
+        return '';
+    }
+
     const title =
         report.status === 'error'
             ? '### Code Connect ↔ Figma sync failed'
