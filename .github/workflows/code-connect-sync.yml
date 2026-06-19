@@ -8,12 +8,6 @@ on:
       - 'tools/code-connect/**'
       - 'package.json'
       - 'package-lock.json'
-      - 'src/components/Avatar/**'
-      - 'src/components/Card/**'
-      - 'src/components/Checkbox/**'
-      - 'src/components/Hotkey/**'
-      - 'src/components/Label/**'
-      - 'src/components/User/**'
   workflow_dispatch:
 
 permissions:

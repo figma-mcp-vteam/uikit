@@ -5,6 +5,9 @@
 .env
 *.log
 
+docs/*plan*.md
+docs/hypothesis.md
+
 node_modules
 
 /storybook-static
