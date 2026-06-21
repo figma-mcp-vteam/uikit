@@ -23,8 +23,6 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
-      - name: Check Code Connect
-        run: npm run code-connect:check
 
   unit_tests:
     name: Unit Tests

@@ -2,7 +2,11 @@
 .vscode
 .history
 .DS_Store
+.env
 *.log
+
+docs/*plan*.md
+docs/hypothesis.md
 
 node_modules
 

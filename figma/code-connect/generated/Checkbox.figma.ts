@@ -1,5 +1,5 @@
-// url=https://www.figma.com/design/GihZUtevc7oCwpDQrcdR4i/YC-Gravity-UI-Code-connect-test?node-id=48571%3A15566
-// source=src/components/Checkbox/Checkbox.tsx
+// url=https://www.figma.com/design/5vAAQi3Iwj9tACtMsduGos/YC%20Gravity%20UI%20%E2%80%93%20Code%20connect%20test?node-id=48571%3A15566
+// source=https://github.com/figma-mcp-vteam/uikit/blob/main/src/components/Checkbox/Checkbox.tsx
 // component=Checkbox
 import figma from 'figma';
 
@@ -15,12 +15,6 @@ export default {
     id: 'checkbox',
     imports: ["import {Checkbox} from '@gravity-ui/uikit';"],
     example: figma.tsx`
-<Checkbox
-    size=${size}
-    checked=${checked}
-    indeterminate=${indeterminate}
-    disabled=${state === 'Disabled'}
-    content=${contentVisible ? contentText : undefined}
-/>`,
+<Checkbox${figma.helpers.react.renderProp('size', size)}${figma.helpers.react.renderProp('checked', checked)}${figma.helpers.react.renderProp('indeterminate', indeterminate)}${figma.helpers.react.renderProp('disabled', state === 'Disabled')}${figma.helpers.react.renderProp('content', contentVisible ? contentText : undefined)} />`,
     metadata: {nestable: true},
 };
